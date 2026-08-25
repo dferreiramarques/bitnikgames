@@ -188,7 +188,7 @@ const slugOf = (id: string) => id.split("/").slice(1).join("/");
 
   .hero-visual {
     position: relative;
-    width: min(340px, 78vw);
+    width: min(460px, 82vw);
     aspect-ratio: 1;
     flex: 0 0 auto;
     margin-inline: auto;
@@ -216,8 +216,8 @@ const slugOf = (id: string) => id.split("/").slice(1).join("/");
   }
 
   .piece-card {
-    top: 26%;
-    right: 2%;
+    top: 18%;
+    right: -6%;
     animation-duration: 7s;
     animation-delay: -2.3s;
   }
@@ -289,14 +289,14 @@ const slugOf = (id: string) => id.split("/").slice(1).join("/");
   }
 
   .piece-character.piece-character-lg {
-    width: 124px;
+    width: min(372px, 68vw);
   }
 
   .piece-character {
     width: 78px;
     height: auto;
     box-shadow: none;
-    filter: drop-shadow(0 10px 14px rgba(43, 27, 18, 0.3));
+    filter: drop-shadow(0 4px 6px rgba(43, 27, 18, 0.14));
   }
 
   @keyframes hero-float {
@@ -330,7 +330,7 @@ const slugOf = (id: string) => id.split("/").slice(1).join("/");
 
   @media (max-width: 600px) {
     .hero-visual {
-      width: min(260px, 68vw);
+      width: min(300px, 78vw);
     }
   }
 
