@@ -108,7 +108,7 @@ Requer Node.js 18.20.8+, 20.3.0+ ou 22.0.0+.
 Para seres honesto contigo próprio (e com quem vir o site) sobre o que já está pronto e o que é só esqueleto visual:
 
 - **Checkout dos jogos "Comprar"** — o botão está desenhado mas desativado (`disabled`). Falta decidir e integrar um fornecedor de pagamentos (ex. Stripe) quando/se avançares para loja própria nalgum jogo.
-- **Newsletter** — o formulário existe visualmente mas não envia para lado nenhum. Falta escolher um serviço (Mailchimp, Buttondown, ConvertKit, etc.) e ligar o `<form>` em `src/components/HomePage.astro`.
+- ~~**Newsletter**~~ — ligada ao Buttondown (`buttondown.com/bitnikgames`) via o método de embed sem backend deles; o `<form>` em `src/components/HomePage.astro` submete a sério.
 - **Ficheiros de print & play reais** — os links de download apontam para `#`. Substitui `fileUrl` no frontmatter de cada `.md` pelo link real do PDF (ou aloja-os em `public/downloads/` e aponta para lá).
 - **Imagens reais** — todos os cards e páginas de detalhe usam um gradiente com o nome do jogo em vez de arte real. Substitui `.card-media` / `.detail-media` por `<img>` quando tiveres capas.
 - **Redes sociais** — os links no footer (Instagram, BGG, itch.io) são placeholders a apontar para os domínios genéricos.

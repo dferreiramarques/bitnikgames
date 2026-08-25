@@ -43,4 +43,4 @@ Cada push para uma branch que não seja `main` gera um preview deploy automátic
 
 ## O que ainda é placeholder (ver README secção 5 para a lista completa)
 
-Checkout dos jogos "Comprar" (botão desativado), newsletter (formulário sem backend), ficheiros de print & play (`fileUrl: "#"`), imagens dos jogos (gradiente com o nome em vez de arte real).
+Checkout dos jogos "Comprar" (botão desativado), ficheiros de print & play (`fileUrl: "#"`), imagens dos jogos (gradiente com o nome em vez de arte real). A newsletter já está ligada a sério (Buttondown, `buttondown.com/bitnikgames`) — ver o `<form>` em `HomePage.astro`.
