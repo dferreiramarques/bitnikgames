@@ -33,7 +33,7 @@ export const ui = {
       newsletterSubtitle: "Aviso quando sai um jogo, um print & play novo, ou um post que vale a pena ler.",
       newsletterPlaceholder: "o-teu-email@exemplo.com",
       newsletterCta: "Subscrever",
-      newsletterSuccess: "Obrigado! Ainda não temos newsletter a sério — mas guardámos a tua vontade de a receber.",
+      newsletterSuccess: "Quase lá — confirma a subscrição na janela que abriu (ou no email que vais receber).",
     },
     catalog: {
       eyebrow: "Catálogo",
@@ -123,7 +123,7 @@ export const ui = {
       newsletterSubtitle: "Get notified when a new game, print & play, or worthwhile post goes live.",
       newsletterPlaceholder: "your-email@example.com",
       newsletterCta: "Subscribe",
-      newsletterSuccess: "Thanks! We don't have a real newsletter yet — but we've noted you'd like one.",
+      newsletterSuccess: "Almost there — confirm your subscription in the window that opened (or in the email you'll receive).",
     },
     catalog: {
       eyebrow: "Catalog",
