@@ -1,5 +1,11 @@
 ---
 // Raiz do site: redireciona para o idioma por defeito (PT).
 // Root of the site: redirects to the default locale (PT).
-return Astro.redirect("/pt/");
+//
+// O redirect "a sério" acontece ao nível do Vercel (ver vercel.json) — é
+// instantâneo, sem qualquer HTML a piscar. Isto aqui é só a rede de
+// segurança para quando o site corre fora do Vercel (preview local,
+// outro hosting estático): status 307 em vez do 302 por defeito evita
+// os 2 segundos de atraso que o Astro injeta na página de fallback.
+return Astro.redirect("/pt/", 307);
 ---
