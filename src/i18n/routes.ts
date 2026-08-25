@@ -14,6 +14,7 @@ export const routes = {
   catalog: { pt: "catalogo", en: "catalog" },
   printAndPlay: { pt: "print-and-play", en: "print-and-play" },
   blog: { pt: "blog", en: "blog" },
+  tools: { pt: "ferramentas", en: "designer-tools" },
   about: { pt: "sobre", en: "about" },
 } as const;
 

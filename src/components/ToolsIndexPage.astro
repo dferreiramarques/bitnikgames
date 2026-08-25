@@ -1,0 +1,62 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { pathTo, type Locale } from "../i18n/routes";
+import { t } from "../i18n/ui";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = t(locale).tools;
+const otherLocale: Locale = locale === "pt" ? "en" : "pt";
+
+// Registo simples das ferramentas disponíveis. Cada ferramenta é uma página
+// dedicada em src/pages/{pt,en}/ferramentas|designer-tools/<slug>.astro — não
+// há conteúdo suficiente ainda para justificar uma content collection própria.
+const tools = [
+  {
+    slug: "bitnik-box-machine",
+    title: "Bitnik Box Machine",
+    description: {
+      pt: "Gera o plano de corte a laser e o embrulho de impressão para uma caixa telescópica de jogo de tabuleiro, a partir das medidas que quiseres.",
+      en: "Generates the laser-cut plan and the print wrap for a telescoping board game box, from whatever measurements you give it.",
+    },
+  },
+];
+---
+
+<Layout locale={locale} altPath={pathTo(otherLocale, "tools")} title={copy.title} description={copy.subtitle}>
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">{copy.eyebrow}</span>
+        <h1>{copy.title}</h1>
+        <p>{copy.subtitle}</p>
+      </div>
+      <div class="grid grid-3">
+        {tools.map((tool) => (
+          <a class="card" href={pathTo(locale, "tools", tool.slug)}>
+            <div class="card-media" aria-hidden="true">{tool.title}</div>
+            <div class="card-body">
+              <h3 class="card-title">{tool.title}</h3>
+              <p class="card-excerpt">{tool.description[locale]}</p>
+              <div class="card-footer">
+                <span class="tool-cta">{copy.openTool} &rarr;</span>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .tool-cta {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--brand-primary);
+  }
+</style>

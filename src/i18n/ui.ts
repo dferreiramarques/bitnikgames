@@ -6,6 +6,7 @@ export const ui = {
       catalog: "Catálogo",
       printAndPlay: "Print & Play",
       blog: "Blog",
+      tools: "Ferramentas de Design",
       about: "Sobre",
       lang: "EN",
     },
@@ -59,6 +60,14 @@ export const ui = {
       readMore: "Ler artigo",
       minRead: "min de leitura",
     },
+    tools: {
+      eyebrow: "Ferramentas de Design",
+      title: "Ferramentas de prototipagem",
+      subtitle:
+        "Utilitários que usamos internamente para prototipar jogos — geradores, calculadoras, o que for preciso. Partilhados aqui porque também te podem ser úteis.",
+      openTool: "Abrir ferramenta",
+      backToTools: "Ferramentas de Design",
+    },
     about: {
       eyebrow: "Sobre",
       title: "Quem é a bitnikgames",
@@ -87,6 +96,7 @@ export const ui = {
       catalog: "Catalog",
       printAndPlay: "Print & Play",
       blog: "Blog",
+      tools: "Designer's Tools",
       about: "About",
       lang: "PT",
     },
@@ -139,6 +149,14 @@ export const ui = {
       subtitle: "Ideas, design decisions, and what we learn playtesting with real people.",
       readMore: "Read article",
       minRead: "min read",
+    },
+    tools: {
+      eyebrow: "Designer's Tools",
+      title: "Prototyping tools",
+      subtitle:
+        "Utilities we use internally to prototype games — generators, calculators, whatever's needed. Shared here because they might be useful to you too.",
+      openTool: "Open tool",
+      backToTools: "Designer's Tools",
     },
     about: {
       eyebrow: "About",

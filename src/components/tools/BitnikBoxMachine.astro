@@ -1,0 +1,1309 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { pathTo, type Locale } from "../../i18n/routes";
+import { t } from "../../i18n/ui";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = t(locale).tools;
+const otherLocale: Locale = locale === "pt" ? "en" : "pt";
+
+const title = "Bitnik Box Machine";
+const description =
+  locale === "pt"
+    ? "Gera o plano de corte a laser e o embrulho de impressão para uma caixa telescópica de jogo de tabuleiro, a partir das medidas que quiseres."
+    : "Generates the laser-cut plan and the print wrap for a telescoping board game box, from whatever measurements you give it.";
+
+// Textos estáticos da interface, em pt/en — os textos gerados dinamicamente
+// pelo script (nomes de peças, resumo, notas) têm o seu próprio dicionário
+// dentro do <script>, porque correm no browser e não têm acesso a `locale`
+// vindo do frontmatter.
+const STRINGS = {
+  pt: {
+    subtitle: "Gerador de caixa · corte a laser + impressão",
+    dims: {
+      legend: "Dimensões exteriores (caixa fechada)",
+      length: "Comprimento",
+      width: "Largura",
+      help: "Tamanho exterior máximo da caixa fechada — é a tampa (a peça maior) que fica exatamente com estas medidas; a base é sempre mais pequena, o suficiente para caber lá dentro com a folga de deslize. O interior útil da base aparece calculado no resumo.",
+    },
+    material: {
+      legend: "Material e corte",
+      thickness: "Espessura do cartão",
+      kerf: "Compensação de kerf",
+      help: "Kerf = material que o feixe consome. Encolhe cada peça esse valor para compensar. Faz um corte de teste e ajusta.",
+    },
+    lid: {
+      legend: "Tampa telescópica (estilo jogo de tabuleiro)",
+      totalHeight: "Altura total fechada",
+      paperThickness: "Espessura da folha impressa",
+      gap: "Folga por lado",
+      help: "A tampa é que é funda — desce até à mesa e cobre a base por completo, formando um paralelepípedo perfeito. A profundidade da base não se escolhe à parte: é a máxima que ainda cabe dentro da tampa fechada, ou seja altura da tampa − espessura do cartão − espessura da folha impressa que embrulha a base (essa camada de papel também ocupa espaço lá dentro). Vês o valor calculado no resumo.",
+    },
+    tabsGlue: {
+      legend: "Abas de cola (cartão)",
+      width: "Largura da aba",
+      help: "Peças de cartão montadas com fita/cola nestas abas laterais. Linha tracejada no plano de corte marca a zona de fita — não é corte.",
+    },
+    laserSheet: {
+      legend: "Folha do laser",
+      preset: "Predefinição",
+      custom: "Personalizado",
+      width: "Largura",
+      height: "Altura",
+      margin: "Margem / espaço",
+    },
+    printSheet: {
+      legend: "Folha de impressão (embrulho)",
+      preset: "Folha mínima preferida",
+      widthCustom: "Largura (personalizado)",
+      heightCustom: "Altura (personalizado)",
+      rim: "Aba de acabamento",
+      corner: "Aba de canto",
+      overlap: "Sobreposição entre folhas",
+      help: "Uma única peça embrulha cada caixa já montada. Se não couber inteira na folha escolhida, a app ignora essa predefinição e sobe automaticamente para A2 / A1 / A0 até caber numa só página. Os cantos têm dois cortes especializados: um bisel oblíquo (~15°) onde a aba de canto encontra a dobra da base/topo — reforça esse ponto em vez de deixar um ângulo reto — e um corte em V onde a aba de acabamento do lado curto se cruza com a aba de canto. Sem curvas — só cortes retos em ângulo.",
+    },
+    mainTabs: { cut: "Plano de corte (laser)", print: "Plano de impressão (embrulho)" },
+    actions: {
+      dlCutCurrent: "Descarregar esta folha (SVG)",
+      dlCutAll: "Descarregar todas as folhas (SVG)",
+      dlPrintCurrent: "Descarregar esta página (SVG)",
+      dlPrintAll: "Descarregar todas as páginas deste embrulho (SVG)",
+    },
+  },
+  en: {
+    subtitle: "Box generator · laser cut + print",
+    dims: {
+      legend: "Outer dimensions (closed box)",
+      length: "Length",
+      width: "Width",
+      help: "Maximum outer size of the closed box — it's the lid (the larger piece) that matches these measurements exactly; the base is always smaller, just enough to slide inside with clearance. The base's usable interior is calculated in the summary.",
+    },
+    material: {
+      legend: "Material and cutting",
+      thickness: "Board thickness",
+      kerf: "Kerf compensation",
+      help: "Kerf = material the beam consumes. Shrinks each piece by this amount to compensate. Do a test cut and adjust.",
+    },
+    lid: {
+      legend: "Telescoping lid (board game style)",
+      totalHeight: "Total closed height",
+      paperThickness: "Printed sheet thickness",
+      gap: "Clearance per side",
+      help: "The lid is the deep part — it comes down to the table and covers the base completely, forming a perfect rectangular box. The base's depth isn't chosen separately: it's the maximum that still fits inside the closed lid, i.e. lid height − board thickness − thickness of the printed sheet wrapping the base (that layer of paper also takes up space inside). See the calculated value in the summary.",
+    },
+    tabsGlue: {
+      legend: "Glue tabs (board)",
+      width: "Tab width",
+      help: "Board pieces assembled with tape/glue on these side tabs. The dashed line in the cut plan marks the tape zone — it's not a cut.",
+    },
+    laserSheet: {
+      legend: "Laser sheet",
+      preset: "Preset",
+      custom: "Custom",
+      width: "Width",
+      height: "Height",
+      margin: "Margin / spacing",
+    },
+    printSheet: {
+      legend: "Print sheet (wrap)",
+      preset: "Preferred minimum sheet",
+      widthCustom: "Width (custom)",
+      heightCustom: "Height (custom)",
+      rim: "Finishing flap",
+      corner: "Corner flap",
+      overlap: "Overlap between sheets",
+      help: "A single piece wraps each assembled box. If it doesn't fit whole on the chosen sheet, the app ignores that preset and automatically steps up to A2 / A1 / A0 until it fits on one page. The corners have two specialized cuts: an angled bevel (~15°) where the corner flap meets the base/top fold — reinforcing that point instead of leaving a right angle — and a V-cut where the short side's finishing flap crosses the corner flap. No curves — only straight angled cuts.",
+    },
+    mainTabs: { cut: "Cut plan (laser)", print: "Print plan (wrap)" },
+    actions: {
+      dlCutCurrent: "Download this sheet (SVG)",
+      dlCutAll: "Download all sheets (SVG)",
+      dlPrintCurrent: "Download this page (SVG)",
+      dlPrintAll: "Download all pages of this wrap (SVG)",
+    },
+  },
+} as const;
+
+const L = STRINGS[locale];
+---
+
+<Layout
+  locale={locale}
+  altPath={pathTo(otherLocale, "tools", "bitnik-box-machine")}
+  title={title}
+  description={description}
+>
+  <section class="section tool-page">
+    <div class="container">
+      <a class="back-link" href={pathTo(locale, "tools")}>&larr; {copy.backToTools}</a>
+
+      <div class="section-head">
+        <span class="eyebrow">{copy.eyebrow}</span>
+        <h1>{title}</h1>
+        <p>{description}</p>
+      </div>
+
+      <div class="bm-app" data-locale={locale}>
+        <aside class="bm-panel">
+          <div class="bm-panel-head">
+            <strong>BITNIK BOX MACHINE</strong>
+            <span>{L.subtitle}</span>
+          </div>
+          <div class="bm-divider"></div>
+
+          <fieldset class="bm-fieldset">
+            <legend>{L.dims.legend}</legend>
+            <div class="bm-row"><label for="bm-ext-l">{L.dims.length}</label><input type="number" id="bm-ext-l" value="280" min="20" step="1" /></div>
+            <div class="bm-row"><label for="bm-ext-w">{L.dims.width}</label><input type="number" id="bm-ext-w" value="280" min="20" step="1" /></div>
+            <p class="bm-help">{L.dims.help}</p>
+          </fieldset>
+
+          <fieldset class="bm-fieldset">
+            <legend>{L.material.legend}</legend>
+            <div class="bm-row"><label for="bm-thickness">{L.material.thickness}</label><input type="number" id="bm-thickness" value="2" min="0.5" step="0.1" /></div>
+            <div class="bm-row"><label for="bm-kerf">{L.material.kerf}</label><input type="number" id="bm-kerf" value="0.1" min="0" step="0.01" /></div>
+            <p class="bm-help">{L.material.help}</p>
+          </fieldset>
+
+          <fieldset class="bm-fieldset">
+            <legend>{L.lid.legend}</legend>
+            <div class="bm-row"><label for="bm-total-h">{L.lid.totalHeight}</label><input type="number" id="bm-total-h" value="70" min="15" step="1" /></div>
+            <div class="bm-row"><label for="bm-paper-thickness">{L.lid.paperThickness}</label><input type="number" id="bm-paper-thickness" value="0.3" min="0" step="0.05" /></div>
+            <div class="bm-row"><label for="bm-gap">{L.lid.gap}</label><input type="number" id="bm-gap" value="0.4" min="0" step="0.05" /></div>
+            <p class="bm-help">{L.lid.help}</p>
+          </fieldset>
+
+          <fieldset class="bm-fieldset">
+            <legend>{L.tabsGlue.legend}</legend>
+            <div class="bm-row"><label for="bm-tab-width">{L.tabsGlue.width}</label><input type="number" id="bm-tab-width" value="12" min="4" step="1" /></div>
+            <p class="bm-help">{L.tabsGlue.help}</p>
+          </fieldset>
+
+          <div class="bm-divider"></div>
+
+          <fieldset class="bm-fieldset">
+            <legend>{L.laserSheet.legend}</legend>
+            <div class="bm-row">
+              <label for="bm-laser-preset">{L.laserSheet.preset}</label>
+              <select id="bm-laser-preset">
+                <option value="600x400">600 × 400 mm</option>
+                <option value="900x600">900 × 600 mm</option>
+                <option value="300x200">300 × 200 mm</option>
+                <option value="custom">{L.laserSheet.custom}</option>
+              </select>
+            </div>
+            <div class="bm-row"><label for="bm-laser-w">{L.laserSheet.width}</label><input type="number" id="bm-laser-w" value="600" min="100" /></div>
+            <div class="bm-row"><label for="bm-laser-h">{L.laserSheet.height}</label><input type="number" id="bm-laser-h" value="400" min="100" /></div>
+            <div class="bm-row"><label for="bm-cut-margin">{L.laserSheet.margin}</label><input type="number" id="bm-cut-margin" value="8" min="0" /></div>
+          </fieldset>
+
+          <fieldset class="bm-fieldset">
+            <legend>{L.printSheet.legend}</legend>
+            <div class="bm-row">
+              <label for="bm-print-preset">{L.printSheet.preset}</label>
+              <select id="bm-print-preset">
+                <option value="210x297">A4 (210 × 297)</option>
+                <option value="297x420" selected>A3 (297 × 420)</option>
+                <option value="420x594">A2 (420 × 594)</option>
+                <option value="594x841">A1 (594 × 841)</option>
+                <option value="841x1189">A0 (841 × 1189)</option>
+                <option value="custom">{L.laserSheet.custom}</option>
+              </select>
+            </div>
+            <div class="bm-row"><label for="bm-print-w">{L.printSheet.widthCustom}</label><input type="number" id="bm-print-w" value="297" min="100" /></div>
+            <div class="bm-row"><label for="bm-print-h">{L.printSheet.heightCustom}</label><input type="number" id="bm-print-h" value="420" min="100" /></div>
+            <div class="bm-row"><label for="bm-rim-overlap">{L.printSheet.rim}</label><input type="number" id="bm-rim-overlap" value="15" min="5" step="1" /></div>
+            <div class="bm-row"><label for="bm-corner-tab">{L.printSheet.corner}</label><input type="number" id="bm-corner-tab" value="10" min="3" step="1" /></div>
+            <div class="bm-row"><label for="bm-tile-overlap">{L.printSheet.overlap}</label><input type="number" id="bm-tile-overlap" value="10" min="0" step="1" /></div>
+            <p class="bm-help">{L.printSheet.help}</p>
+          </fieldset>
+
+          <div class="bm-summary" id="bm-summary"></div>
+        </aside>
+
+        <div class="bm-workspace">
+          <div class="bm-tabs">
+            <button data-tab="cut" class="active">{L.mainTabs.cut}</button>
+            <button data-tab="print">{L.mainTabs.print}</button>
+          </div>
+
+          <div id="bm-cut-view" class="bm-view active">
+            <div class="bm-chip-row" id="bm-cut-sheet-tabs"></div>
+            <div class="bm-canvas-wrap" id="bm-cut-canvas"></div>
+            <div class="bm-actions">
+              <button class="btn btn-outline" id="bm-dl-cut-current">{L.actions.dlCutCurrent}</button>
+              <button class="btn btn-outline" id="bm-dl-cut-all">{L.actions.dlCutAll}</button>
+            </div>
+            <div class="bm-titleblock" id="bm-cut-titleblock"></div>
+          </div>
+
+          <div id="bm-print-view" class="bm-view">
+            <div class="bm-chip-row" id="bm-net-tabs"></div>
+            <div class="bm-overview">
+              <div class="bm-thumb" id="bm-net-thumb"></div>
+              <p class="bm-note" id="bm-net-note"></p>
+            </div>
+            <div class="bm-chip-row" id="bm-print-sheet-tabs"></div>
+            <div class="bm-canvas-wrap" id="bm-print-canvas"></div>
+            <div class="bm-actions">
+              <button class="btn btn-outline" id="bm-dl-print-current">{L.actions.dlPrintCurrent}</button>
+              <button class="btn btn-outline" id="bm-dl-print-all">{L.actions.dlPrintAll}</button>
+            </div>
+            <div class="bm-titleblock" id="bm-print-titleblock"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .tool-page :global(.section-head) {
+    margin-bottom: 2rem;
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-bottom: 1rem;
+  }
+
+  .bm-app {
+    --bm-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 1.75rem;
+    align-items: start;
+  }
+
+  @media (max-width: 900px) {
+    .bm-app {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .bm-panel {
+    background: var(--color-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem 1.25rem 1.5rem;
+    box-shadow: var(--shadow-card);
+  }
+
+  .bm-panel-head strong {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    letter-spacing: 0.04em;
+    color: var(--text);
+  }
+
+  .bm-panel-head span {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 0.2rem;
+  }
+
+  .bm-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 1rem 0;
+  }
+
+  .bm-fieldset {
+    border: none;
+    margin: 0 0 0.9rem;
+    padding: 0;
+  }
+
+  .bm-fieldset legend {
+    font-family: var(--font-display);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--brand-primary);
+    margin-bottom: 0.6rem;
+    padding: 0;
+  }
+
+  .bm-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    margin-bottom: 0.55rem;
+  }
+
+  .bm-row label {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    flex: 1;
+  }
+
+  .bm-row input[type="number"] {
+    width: 82px;
+    background: var(--bg-alt);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: var(--radius-sm);
+    padding: 0.35rem 0.5rem;
+    font-family: var(--bm-mono);
+    font-size: 0.82rem;
+    text-align: right;
+  }
+
+  .bm-row input[type="number"]:focus-visible {
+    border-color: var(--brand-primary);
+  }
+
+  .bm-row select {
+    background: var(--bg-alt);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: var(--radius-sm);
+    padding: 0.35rem 0.5rem;
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    width: 100%;
+  }
+
+  .bm-help {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+    margin: 0.2rem 0 0.7rem;
+  }
+
+  .bm-summary {
+    background: var(--bg-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0.85rem 1rem;
+    margin-top: 0.4rem;
+  }
+
+  .bm-summary :global(.srow) {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    font-size: 0.78rem;
+    padding: 0.2rem 0;
+    color: var(--text-muted);
+  }
+
+  .bm-summary :global(.srow b) {
+    color: var(--text);
+    font-family: var(--bm-mono);
+    font-weight: 600;
+    text-align: right;
+  }
+
+  .bm-summary :global(.srow.warn-row) {
+    color: var(--brand-primary);
+    font-size: 0.74rem;
+    line-height: 1.4;
+  }
+
+  .bm-summary :global(.warn) {
+    color: var(--brand-primary);
+  }
+
+  .bm-workspace {
+    min-width: 0;
+  }
+
+  .bm-tabs {
+    display: flex;
+    gap: 0.25rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .bm-tabs button {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.88rem;
+    padding: 0.6rem 1rem;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+  }
+
+  .bm-tabs button.active {
+    color: var(--brand-primary);
+    border-bottom-color: var(--brand-primary);
+  }
+
+  .bm-view {
+    display: none;
+  }
+
+  .bm-view.active {
+    display: block;
+  }
+
+  .bm-chip-row {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.75rem;
+  }
+
+  .bm-chip-row :global(button) {
+    background: var(--color-white);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-family: var(--bm-mono);
+    font-size: 0.72rem;
+    padding: 0.3rem 0.65rem;
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+  }
+
+  .bm-chip-row :global(button.active) {
+    color: var(--color-white);
+    background: var(--color-brick);
+    border-color: var(--color-brick);
+    font-weight: 700;
+  }
+
+  .bm-chip-row :global(button.active.net-lid) {
+    background: var(--color-orange);
+    border-color: var(--color-orange);
+  }
+
+  .bm-canvas-wrap {
+    background: var(--color-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.1rem;
+    display: flex;
+    justify-content: center;
+    overflow: auto;
+  }
+
+  .bm-canvas-wrap :global(svg) {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .bm-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .bm-titleblock {
+    margin-top: 1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--color-white);
+    display: flex;
+    flex-wrap: wrap;
+    font-family: var(--bm-mono);
+    font-size: 0.72rem;
+    color: var(--text-muted);
+  }
+
+  .bm-titleblock :global(div) {
+    padding: 0.55rem 0.9rem;
+    border-right: 1px solid var(--border);
+  }
+
+  .bm-titleblock :global(div:last-child) {
+    border-right: none;
+  }
+
+  .bm-titleblock :global(b) {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--brand-primary);
+    margin-bottom: 0.15rem;
+    font-weight: 700;
+  }
+
+  .bm-overview {
+    display: flex;
+    gap: 1.1rem;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .bm-thumb {
+    background: var(--color-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0.6rem;
+  }
+
+  .bm-thumb :global(svg) {
+    display: block;
+  }
+
+  .bm-note {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    max-width: 34ch;
+    margin: 0;
+  }
+</style>
+
+<script is:inline define:vars={{ locale }}>
+  /* --- design tokens locais (fonte: os tokens do site) --- */
+  const COLORS = {
+    bg: "#fffaf1",
+    line: "#ecd6ac",
+    grid: "#f3e4cb",
+    cut: "#b8461f",
+    print: "#ea7c2e",
+    overlap: "#e8a93b",
+    overlapWash: "rgba(232,169,59,0.16)",
+    printWash: "rgba(234,124,46,0.08)",
+    fold: "#5b4636",
+    text: "#2b1b12",
+    muted: "#5b4636",
+  };
+
+  /* --- dicionário de textos gerados dinamicamente pelo script --- */
+  const DICT = {
+    pt: {
+      customSheetName: "Personalizado",
+      panel: { bottom: "Fundo", front: "Frente", back: "Trás", sideL: "Lateral E", sideR: "Lateral D" },
+      piece: { base: "Base", lid: "Tampa" },
+      cutLegend: { cut: "corte", tape: "zona de fita/cola (não corta)" },
+      sheetWord: "FOLHA",
+      wrapLabel: { base: "BASE — embrulho", lid: "TAMPA — embrulho" },
+      printLegend: { cut: "corte (contorno + alívio de canto)", fold: "dobra" },
+      overlapRight: "sobrepõe com a folha à direita",
+      overlapBelow: "sobrepõe com a folha abaixo",
+      pageFooter: (label, row, col, rows, cols) => `${label} · página linha ${row} col ${col} de ${rows}×${cols}`,
+      summary: {
+        baseInterior: "Interior da base (calc.)",
+        trayDepth: "Profundidade da bandeja (calc.)",
+        baseOuter: "Base (bandeja) exterior",
+        lidOuter: "Tampa exterior",
+        totalHeight: "Altura total fechada",
+        usableSpace: "Espaço útil p/ conteúdo",
+        piecesToCut: "Peças a cortar",
+        laserSheets: "Folhas de laser",
+        baseWrap: "Embrulho base",
+        lidWrap: "Embrulho tampa",
+        warnHeight:
+          "⚠ altura total pedida era baixa demais para sobrar profundidade de bandeja — subiu automaticamente",
+        warnFootprint:
+          "⚠ comprimento/largura pedidos eram pequenos demais para sobrar base — subiram automaticamente",
+      },
+      sheetTabPrefix: "Folha ",
+      netTabPrefix: "Embrulho — ",
+      netLabels: { base: "Base", tampa: "Tampa" },
+      fitsOneUpgraded: (name, w, h) =>
+        `Cabe inteira numa folha ${name} (${w}×${h}mm) — a predefinição mais pequena escolhida não chegava, por isso subiu automaticamente.`,
+      fitsOne: (name, w, h) => `Cabe inteira numa folha ${name} (${w}×${h}mm). Uma só página, sem juntar folhas.`,
+      needsTiling: (cols, rows, name) =>
+        `Nem A0 chega para uma só página — divide-se em ${cols}×${rows} páginas ${name}. Imprime todas, alinha pelas faixas de sobreposição (a amarelo), cola/fita as páginas entre si e só depois recorta o contorno final (laranja).`,
+      unfoldedSize: (w, h) => `Tamanho total desdobrado: ${w} × ${h} mm.`,
+      titleblock: {
+        piece: "Peça",
+        pieceValue: "Bitnik Box Machine — caixa",
+        material: "Material",
+        materialValue: (t) => `${t}mm cartão`,
+        joints: "Juntas",
+        jointsValue: "topo + aba de fita/cola",
+        kerf: "Kerf",
+        sheets: "Folhas",
+        rim: "Aba de acabamento",
+        rimValue: (v) => `${v}mm (dobra para dentro)`,
+        corner: "Aba de canto",
+        cornerValue: (v) => `${v}mm (dobra à volta da aresta)`,
+        cornerCut: "Corte de canto",
+        cornerCutValue: "bisel oblíquo + V, validado contra grelha real",
+        sheet: "Folha",
+      },
+    },
+    en: {
+      customSheetName: "Custom",
+      panel: { bottom: "Bottom", front: "Front", back: "Back", sideL: "Side L", sideR: "Side R" },
+      piece: { base: "Base", lid: "Lid" },
+      cutLegend: { cut: "cut", tape: "tape/glue zone (not a cut)" },
+      sheetWord: "SHEET",
+      wrapLabel: { base: "BASE — wrap", lid: "LID — wrap" },
+      printLegend: { cut: "cut (outline + corner relief)", fold: "fold" },
+      overlapRight: "overlaps with sheet to the right",
+      overlapBelow: "overlaps with sheet below",
+      pageFooter: (label, row, col, rows, cols) => `${label} · page row ${row} col ${col} of ${rows}×${cols}`,
+      summary: {
+        baseInterior: "Base interior (calc.)",
+        trayDepth: "Tray depth (calc.)",
+        baseOuter: "Base (tray) outer",
+        lidOuter: "Lid outer",
+        totalHeight: "Total closed height",
+        usableSpace: "Usable space for contents",
+        piecesToCut: "Pieces to cut",
+        laserSheets: "Laser sheets",
+        baseWrap: "Base wrap",
+        lidWrap: "Lid wrap",
+        warnHeight: "⚠ requested total height was too low to leave any tray depth — increased automatically",
+        warnFootprint: "⚠ requested length/width were too small to leave a base — increased automatically",
+      },
+      sheetTabPrefix: "Sheet ",
+      netTabPrefix: "Wrap — ",
+      netLabels: { base: "Base", tampa: "Lid" },
+      fitsOneUpgraded: (name, w, h) =>
+        `Fits whole on one ${name} sheet (${w}×${h}mm) — the smaller chosen preset wasn't enough, so it stepped up automatically.`,
+      fitsOne: (name, w, h) => `Fits whole on one ${name} sheet (${w}×${h}mm). A single page, no need to join sheets.`,
+      needsTiling: (cols, rows, name) =>
+        `Even A0 isn't enough for a single page — splits into ${cols}×${rows} ${name} pages. Print them all, align using the overlap strips (in yellow), glue/tape the pages together, and only then cut the final outline (in orange).`,
+      unfoldedSize: (w, h) => `Total unfolded size: ${w} × ${h} mm.`,
+      titleblock: {
+        piece: "Piece",
+        pieceValue: "Bitnik Box Machine — box",
+        material: "Material",
+        materialValue: (t) => `${t}mm board`,
+        joints: "Joints",
+        jointsValue: "top + tape/glue tab",
+        kerf: "Kerf",
+        sheets: "Sheets",
+        rim: "Finishing flap",
+        rimValue: (v) => `${v}mm (folds inward)`,
+        corner: "Corner flap",
+        cornerValue: (v) => `${v}mm (wraps around the edge)`,
+        cornerCut: "Corner cut",
+        cornerCutValue: "angled bevel + V, validated against a real cutting grid",
+        sheet: "Sheet",
+      },
+    },
+  };
+  const D = DICT[locale] || DICT.pt;
+
+  // ---------- geometria da caixa (para o corte a laser) ----------
+  function shell(Lo, Wo, Hi, t, tab, pieceLabel) {
+    const Li = Lo - 2 * t,
+      Wi = Wo - 2 * t;
+    const panels = [
+      { name: pieceLabel + " — " + D.panel.bottom, w: Lo, h: Wo, tabbed: false },
+      { name: pieceLabel + " — " + D.panel.front, w: Lo, h: Hi, tabbed: false },
+      { name: pieceLabel + " — " + D.panel.back, w: Lo, h: Hi, tabbed: false },
+      { name: pieceLabel + " — " + D.panel.sideL, w: Wi + 2 * tab, h: Hi, tabbed: true, tabW: tab },
+      { name: pieceLabel + " — " + D.panel.sideR, w: Wi + 2 * tab, h: Hi, tabbed: true, tabW: tab },
+    ];
+    return { Lo, Wo, Li, Wi, Hi, panels };
+  }
+
+  function computeAll(p) {
+    const minBaseTrayH = 5;
+    const minLidWallH = minBaseTrayH + p.thickness + p.paperThickness;
+    const minTotalH = minLidWallH + p.thickness;
+    const totalHUsed = Math.max(p.totalH, minTotalH);
+    const clamped = totalHUsed > p.totalH + 0.01;
+
+    const lidWallH = totalHUsed - p.thickness;
+    const baseTrayH = lidWallH - p.thickness - p.paperThickness;
+
+    const minBaseFootprint = 20;
+    const minLidL = minBaseFootprint + 2 * p.gap + 2 * p.thickness;
+    const minLidW = minBaseFootprint + 2 * p.gap + 2 * p.thickness;
+    const lidLoUsed = Math.max(p.extL, minLidL);
+    const lidWoUsed = Math.max(p.extW, minLidW);
+    const footprintClamped = lidLoUsed > p.extL + 0.01 || lidWoUsed > p.extW + 0.01;
+
+    const baseLo = lidLoUsed - 2 * p.gap - 2 * p.thickness;
+    const baseWo = lidWoUsed - 2 * p.gap - 2 * p.thickness;
+
+    const base = shell(baseLo, baseWo, baseTrayH, p.thickness, p.tabWidth, D.piece.base);
+    const lid = shell(lidLoUsed, lidWoUsed, lidWallH, p.thickness, p.tabWidth, D.piece.lid);
+
+    const cutPanels = [...base.panels, ...lid.panels].map((pn) => ({
+      ...pn,
+      w: Math.max(1, pn.w - p.kerf),
+      h: Math.max(1, pn.h - p.kerf),
+    }));
+
+    const baseExtH = baseTrayH + p.thickness;
+    return { base, lid, cutPanels, lidWallH, baseTrayH, totalHUsed, clamped, baseExtH, footprintClamped };
+  }
+
+  // ---------- empacotamento das peças de corte (guilhotina, Best Area Fit) ----------
+  function splitFreeRectGuillotine(free, usedW, usedH) {
+    const leftoverW = free.w - usedW,
+      leftoverH = free.h - usedH;
+    const out = [];
+    if (leftoverW <= leftoverH) {
+      if (leftoverW > 1e-6) out.push({ x: free.x + usedW, y: free.y, w: leftoverW, h: usedH });
+      if (leftoverH > 1e-6) out.push({ x: free.x, y: free.y + usedH, w: free.w, h: leftoverH });
+    } else {
+      if (leftoverH > 1e-6) out.push({ x: free.x, y: free.y + usedH, w: usedW, h: leftoverH });
+      if (leftoverW > 1e-6) out.push({ x: free.x + usedW, y: free.y, w: leftoverW, h: free.h });
+    }
+    return out;
+  }
+  function guillotinePack(items, areaW, areaH, spacing) {
+    const sorted = items.slice().sort((a, b) => b.w * b.h - a.w * a.h);
+    let freeRects = [{ x: 0, y: 0, w: areaW, h: areaH }];
+    const placed = [],
+      notPlaced = [];
+    for (const it of sorted) {
+      let best = null;
+      for (let fi = 0; fi < freeRects.length; fi++) {
+        const fr = freeRects[fi];
+        for (const rot of [false, true]) {
+          const w = (rot ? it.h : it.w) + spacing,
+            h = (rot ? it.w : it.h) + spacing;
+          if (fr.w >= w - 1e-6 && fr.h >= h - 1e-6) {
+            const leftoverArea = fr.w * fr.h - w * h;
+            if (
+              !best ||
+              leftoverArea < best.leftoverArea - 1e-6 ||
+              (Math.abs(leftoverArea - best.leftoverArea) <= 1e-6 &&
+                (fr.y < best.fr.y || (fr.y === best.fr.y && fr.x < best.fr.x)))
+            ) {
+              best = { fi, fr, w, h, rot, leftoverArea };
+            }
+          }
+        }
+      }
+      if (!best) {
+        notPlaced.push(it);
+        continue;
+      }
+      freeRects.splice(best.fi, 1);
+      freeRects.push(...splitFreeRectGuillotine(best.fr, best.w, best.h));
+      placed.push({ ...it, x: best.fr.x, y: best.fr.y, w: best.rot ? it.h : it.w, h: best.rot ? it.w : it.h, rot: best.rot });
+    }
+    return { placed, notPlaced };
+  }
+  function pack(panels, sheetW, sheetH, margin, spacing) {
+    const areaX = margin,
+      areaY = margin + LEGEND_H;
+    const areaW = sheetW - 2 * margin,
+      areaH = sheetH - 2 * margin - LEGEND_H;
+    let remaining = panels.slice();
+    const sheets = [];
+    let guard = 0;
+    while (remaining.length && guard++ < 50) {
+      const { placed, notPlaced } = guillotinePack(remaining, areaW, areaH, spacing);
+      if (placed.length === 0) {
+        sheets.push(remaining.map((it) => ({ ...it, x: areaX, y: areaY, rot: false })));
+        break;
+      }
+      sheets.push(placed.map((it) => ({ ...it, x: it.x + areaX, y: it.y + areaY })));
+      remaining = notPlaced;
+    }
+    if (sheets.length === 0) sheets.push([]);
+    return sheets;
+  }
+
+  function legend(x, y, entries) {
+    let s = "";
+    entries.forEach((e, i) => {
+      const ly = y + i * 5;
+      const dash = e.solid ? "" : ' stroke-dasharray="1.2,1.2"';
+      s += `<line x1="${x}" y1="${ly}" x2="${x + 8}" y2="${ly}" stroke="${e.color}" stroke-width="0.5"${dash}/>`;
+      s += `<text x="${x + 11}" y="${ly + 1.3}" font-size="3.2" fill="${COLORS.muted}" font-family="monospace">${e.text}</text>`;
+    });
+    return s;
+  }
+
+  function svgOpen(w, h) {
+    return (
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" width="${w}mm" height="${h}mm">` +
+      `<rect x="0" y="0" width="${w}" height="${h}" fill="${COLORS.bg}" stroke="${COLORS.line}" stroke-width="0.6"/>`
+    );
+  }
+
+  function cutSheetSVG(items, sheetW, sheetH, sheetIdx, total) {
+    let s = svgOpen(sheetW, sheetH);
+    s += legend(4, 5, [
+      { color: COLORS.cut, solid: true, text: D.cutLegend.cut },
+      { color: COLORS.fold, solid: false, text: D.cutLegend.tape },
+    ]);
+    s += `<line x1="0" y1="${LEGEND_H}" x2="${sheetW}" y2="${LEGEND_H}" stroke="${COLORS.line}" stroke-width="0.3"/>`;
+    for (const it of items) {
+      s += `<rect x="${it.x}" y="${it.y}" width="${it.w}" height="${it.h}" fill="none" stroke="${COLORS.cut}" stroke-width="0.4"/>`;
+      if (it.tabbed) {
+        const tw = it.tabW;
+        s += `<line x1="${it.x + tw}" y1="${it.y}" x2="${it.x + tw}" y2="${it.y + it.h}" stroke="${COLORS.fold}" stroke-width="0.25" stroke-dasharray="1.5,1.5"/>`;
+        s += `<line x1="${it.x + it.w - tw}" y1="${it.y}" x2="${it.x + it.w - tw}" y2="${it.y + it.h}" stroke="${COLORS.fold}" stroke-width="0.25" stroke-dasharray="1.5,1.5"/>`;
+      }
+      const fs = Math.max(2.2, Math.min(it.w, it.h) / 9);
+      s += `<text x="${it.x + it.w / 2}" y="${it.y + it.h / 2}" font-size="${fs}" fill="${COLORS.text}" font-family="monospace" text-anchor="middle" dominant-baseline="middle">${it.name}${it.rot ? " ↻" : ""}</text>`;
+      s += `<text x="${it.x + it.w / 2}" y="${it.y + it.h / 2 + fs * 1.3}" font-size="${fs * 0.75}" fill="${COLORS.muted}" font-family="monospace" text-anchor="middle">${it.w.toFixed(1)}×${it.h.toFixed(1)}mm</text>`;
+    }
+    s += `<text x="4" y="${sheetH - 3}" font-size="4" fill="${COLORS.muted}" font-family="monospace">${D.sheetWord} ${sheetIdx + 1}/${total} · ${sheetW}×${sheetH}mm</text>`;
+    s += `</svg>`;
+    return s;
+  }
+
+  function buildWrapNet(Lo, Wo, Hwall, rim, corner, label) {
+    const D_ = Hwall + rim;
+    const c = Math.min(corner, D_ - 1, Wo / 2 - 1, Lo / 2 - 1);
+    const r = Math.min(rim, D_ - 1);
+    const width = Lo + 2 * D_;
+    const height = Wo + 2 * D_;
+
+    const bevX = c * 0.97;
+    const bevY = bevX * 0.261;
+
+    const outline = [
+      [D_ - c, 0],
+      [D_ + Lo + c, 0],
+      [D_ + Lo + c, D_ - bevY],
+      [D_ + Lo + c + bevX, D_],
+      [2 * D_ + Lo - r, D_],
+      [2 * D_ + Lo, D_ + c],
+      [2 * D_ + Lo, D_ + Wo - c],
+      [2 * D_ + Lo - r, D_ + Wo],
+      [D_ + Lo + c + bevX, D_ + Wo],
+      [D_ + Lo + c, D_ + Wo + bevY],
+      [D_ + Lo + c, 2 * D_ + Wo],
+      [D_ - c, 2 * D_ + Wo],
+      [D_ - c, D_ + Wo + bevY],
+      [D_ - c - bevX, D_ + Wo],
+      [r, D_ + Wo],
+      [0, D_ + Wo - c],
+      [0, D_ + c],
+      [r, D_],
+      [D_ - c - bevX, D_],
+      [D_ - c, D_ - bevY],
+    ];
+
+    const folds = [
+      [[D_, D_], [D_ + Lo, D_]],
+      [[D_, D_ + Wo], [D_ + Lo, D_ + Wo]],
+      [[D_, D_], [D_, D_ + Wo]],
+      [[D_ + Lo, D_], [D_ + Lo, D_ + Wo]],
+      [[D_ - c, D_ - Hwall], [D_ + Lo + c, D_ - Hwall]],
+      [[D_ - c, D_ + Wo + Hwall], [D_ + Lo + c, D_ + Wo + Hwall]],
+      [[D_ - Hwall, D_], [D_ - Hwall, D_ + Wo]],
+      [[D_ + Lo + Hwall, D_], [D_ + Lo + Hwall, D_ + Wo]],
+      [[D_, 0], [D_, D_]],
+      [[D_ + Lo, 0], [D_ + Lo, D_]],
+      [[D_, D_ + Wo], [D_, 2 * D_ + Wo]],
+      [[D_ + Lo, D_ + Wo], [D_ + Lo, 2 * D_ + Wo]],
+    ];
+
+    const relief = 2;
+    const reliefCuts = [
+      [[D_, D_ - Hwall], [D_, D_ - Hwall + relief]],
+      [[D_ + Lo, D_ - Hwall], [D_ + Lo, D_ - Hwall + relief]],
+      [[D_, D_ + Wo + Hwall], [D_, D_ + Wo + Hwall - relief]],
+      [[D_ + Lo, D_ + Wo + Hwall], [D_ + Lo, D_ + Wo + Hwall - relief]],
+    ];
+
+    return { width, height, outline, folds, reliefCuts, D: D_, c, r, label, Lo, Wo, Hwall, rim };
+  }
+
+  function netSVGBody(net) {
+    const pts = net.outline.map((p) => p.join(",")).join(" ");
+    let s = `<polygon points="${pts}" fill="${COLORS.printWash}" stroke="${COLORS.print}" stroke-width="0.5"/>`;
+    net.folds.forEach(([[x1, y1], [x2, y2]]) => {
+      s += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${COLORS.fold}" stroke-width="0.3" stroke-dasharray="2,2"/>`;
+    });
+    net.reliefCuts.forEach(([[x1, y1], [x2, y2]]) => {
+      s += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${COLORS.print}" stroke-width="0.4"/>`;
+    });
+    const cx = net.D + net.Lo / 2,
+      cy = net.D + net.Wo / 2;
+    const fs = Math.max(3, Math.min(net.Lo, net.Wo) / 14);
+    s += `<text x="${cx}" y="${cy}" font-size="${fs}" fill="${COLORS.text}" font-family="monospace" text-anchor="middle" dominant-baseline="middle">${net.label}</text>`;
+    s += `<text x="${cx}" y="${cy + fs * 1.4}" font-size="${fs * 0.7}" fill="${COLORS.muted}" font-family="monospace" text-anchor="middle">${net.Lo.toFixed(0)}×${net.Wo.toFixed(0)}×${net.Hwall.toFixed(0)}mm</text>`;
+    return s;
+  }
+
+  function netThumbSVG(net, maxPx) {
+    const scale = maxPx / Math.max(net.width, net.height);
+    const w = net.width * scale,
+      h = net.height * scale;
+    let s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${net.width} ${net.height}" width="${w}" height="${h}">`;
+    s += `<rect x="0" y="0" width="${net.width}" height="${net.height}" fill="${COLORS.bg}"/>`;
+    s += netSVGBody(net);
+    s += `</svg>`;
+    return s;
+  }
+
+  const LEGEND_H = 12;
+
+  function tileNet(net, sheetW, sheetH, margin, overlap) {
+    const areaW = sheetW - 2 * margin,
+      areaH = sheetH - 2 * margin - LEGEND_H;
+    const stepX = Math.max(10, areaW - overlap),
+      stepY = Math.max(10, areaH - overlap);
+    const cols = Math.max(1, Math.ceil((net.width - overlap) / stepX));
+    const rows = Math.max(1, Math.ceil((net.height - overlap) / stepY));
+    const tiles = [];
+    for (let r = 0; r < rows; r++) {
+      for (let cIdx = 0; cIdx < cols; cIdx++) {
+        const gx = cIdx * stepX,
+          gy = r * stepY;
+        const tw = Math.min(areaW, net.width - gx);
+        const th = Math.min(areaH, net.height - gy);
+        tiles.push({ row: r, col: cIdx, gx, gy, tw, th });
+      }
+    }
+    return { cols, rows, tiles };
+  }
+
+  function tileSVG(net, tile, sheetW, sheetH, margin, overlap, cols, rows) {
+    const clipId = "clip" + Math.random().toString(36).slice(2, 9);
+    const top = margin + LEGEND_H;
+    let s = svgOpen(sheetW, sheetH);
+    s += legend(4, 5, [
+      { color: COLORS.print, solid: true, text: D.printLegend.cut },
+      { color: COLORS.fold, solid: false, text: D.printLegend.fold },
+    ]);
+    s += `<line x1="0" y1="${LEGEND_H}" x2="${sheetW}" y2="${LEGEND_H}" stroke="${COLORS.line}" stroke-width="0.3"/>`;
+    s += `<clipPath id="${clipId}"><rect x="${margin}" y="${top}" width="${tile.tw}" height="${tile.th}"/></clipPath>`;
+    s += `<g clip-path="url(#${clipId})"><g transform="translate(${margin - tile.gx},${top - tile.gy})">${netSVGBody(net)}</g></g>`;
+    if (tile.col < cols - 1) {
+      s += `<rect x="${margin + tile.tw - overlap}" y="${top}" width="${overlap}" height="${tile.th}" fill="${COLORS.overlapWash}"/>`;
+      s += `<text x="${margin + tile.tw - overlap / 2}" y="${top + tile.th / 2}" font-size="3" fill="${COLORS.overlap}" font-family="monospace" text-anchor="middle" transform="rotate(90 ${margin + tile.tw - overlap / 2} ${top + tile.th / 2})">${D.overlapRight}</text>`;
+    }
+    if (tile.row < rows - 1) {
+      s += `<rect x="${margin}" y="${top + tile.th - overlap}" width="${tile.tw}" height="${overlap}" fill="${COLORS.overlapWash}"/>`;
+      s += `<text x="${margin + tile.tw / 2}" y="${top + tile.th - overlap / 2 + 1}" font-size="3" fill="${COLORS.overlap}" font-family="monospace" text-anchor="middle">${D.overlapBelow}</text>`;
+    }
+    s += `<rect x="${margin}" y="${top}" width="${tile.tw}" height="${tile.th}" fill="none" stroke="${COLORS.line}" stroke-width="0.3" stroke-dasharray="0.8,1.5"/>`;
+    s += `<text x="4" y="${sheetH - 3}" font-size="4" fill="${COLORS.muted}" font-family="monospace">${D.pageFooter(net.label, tile.row + 1, tile.col + 1, rows, cols)}</text>`;
+    s += `</svg>`;
+    return s;
+  }
+
+  const A_SIZES = [
+    { key: "210x297", w: 210, h: 297, name: "A4" },
+    { key: "297x420", w: 297, h: 420, name: "A3" },
+    { key: "420x594", w: 420, h: 594, name: "A2" },
+    { key: "594x841", w: 594, h: 841, name: "A1" },
+    { key: "841x1189", w: 841, h: 1189, name: "A0" },
+  ];
+
+  function bestFitSheet(net, startIdx, margin, overlap) {
+    for (let i = startIdx; i < A_SIZES.length; i++) {
+      const sz = A_SIZES[i];
+      const orientations = sz.w === sz.h ? [[sz.w, sz.h]] : [[sz.w, sz.h], [sz.h, sz.w]];
+      for (const [w, h] of orientations) {
+        const grid = tileNet(net, w, h, margin, overlap);
+        if (grid.cols === 1 && grid.rows === 1) {
+          const rotated = w !== sz.w;
+          return { size: { ...sz, w, h, name: sz.name + (rotated ? " ↻" : "") }, grid, upgraded: i > startIdx };
+        }
+      }
+    }
+    const sz = A_SIZES[A_SIZES.length - 1];
+    const orientations = sz.w === sz.h ? [[sz.w, sz.h]] : [[sz.w, sz.h], [sz.h, sz.w]];
+    let best = null;
+    for (const [w, h] of orientations) {
+      const grid = tileNet(net, w, h, margin, overlap);
+      if (!best || grid.tiles.length < best.grid.tiles.length) {
+        const rotated = w !== sz.w;
+        best = { size: { ...sz, w, h, name: sz.name + (rotated ? " ↻" : "") }, grid, upgraded: true, tooBig: true };
+      }
+    }
+    return best;
+  }
+
+  const $ = (id) => document.getElementById(id);
+  let state = {
+    cutSheets: [],
+    cutIdx: 0,
+    cutW: 600,
+    cutH: 400,
+    nets: {},
+    activeNet: "base",
+    tileIdx: { base: 0, tampa: 0 },
+    grids: {},
+    sheetInfo: {},
+    margin: 8,
+    overlap: 10,
+  };
+
+  function readParams() {
+    return {
+      extL: +$("bm-ext-l").value,
+      extW: +$("bm-ext-w").value,
+      thickness: +$("bm-thickness").value,
+      kerf: +$("bm-kerf").value,
+      totalH: +$("bm-total-h").value,
+      paperThickness: +$("bm-paper-thickness").value,
+      gap: +$("bm-gap").value,
+      tabWidth: +$("bm-tab-width").value,
+    };
+  }
+
+  function recompute() {
+    const p = readParams();
+    const laserW = +$("bm-laser-w").value,
+      laserH = +$("bm-laser-h").value,
+      cutMargin = +$("bm-cut-margin").value;
+    const rim = +$("bm-rim-overlap").value,
+      corner = +$("bm-corner-tab").value,
+      overlap = +$("bm-tile-overlap").value;
+    const printPreset = $("bm-print-preset").value;
+    const margin = 8;
+
+    const isCustom = printPreset === "custom";
+    $("bm-print-w").disabled = !isCustom;
+    $("bm-print-h").disabled = !isCustom;
+
+    const geo = computeAll(p);
+    const cutSheets = pack(geo.cutPanels, laserW, laserH, cutMargin, 4);
+
+    const baseNet = buildWrapNet(geo.base.Lo, geo.base.Wo, geo.baseTrayH, rim, corner, D.wrapLabel.base);
+    const lidNet = buildWrapNet(geo.lid.Lo, geo.lid.Wo, geo.lidWallH, rim, corner, D.wrapLabel.lid);
+
+    let baseFit, lidFit;
+    if (isCustom) {
+      const w = +$("bm-print-w").value,
+        h = +$("bm-print-h").value;
+      const sz = { key: "custom", w, h, name: D.customSheetName };
+      baseFit = { size: sz, grid: tileNet(baseNet, w, h, margin, overlap), upgraded: false };
+      lidFit = { size: sz, grid: tileNet(lidNet, w, h, margin, overlap), upgraded: false };
+    } else {
+      const startIdx = A_SIZES.findIndex((s) => s.key === printPreset);
+      baseFit = bestFitSheet(baseNet, startIdx, margin, overlap);
+      lidFit = bestFitSheet(lidNet, startIdx, margin, overlap);
+    }
+
+    state = {
+      ...state,
+      cutSheets,
+      cutW: laserW,
+      cutH: laserH,
+      nets: { base: baseNet, tampa: lidNet },
+      grids: { base: baseFit.grid, tampa: lidFit.grid },
+      sheetInfo: { base: baseFit, tampa: lidFit },
+      margin,
+      overlap,
+      cutIdx: Math.min(state.cutIdx, cutSheets.length - 1),
+      tileIdx: {
+        base: Math.min(state.tileIdx.base, baseFit.grid.tiles.length - 1),
+        tampa: Math.min(state.tileIdx.tampa, lidFit.grid.tiles.length - 1),
+      },
+      geo,
+      p,
+    };
+
+    renderSummary(p, geo, cutSheets, baseFit, lidFit);
+    renderSheetTabs("bm-cut-sheet-tabs", cutSheets.length, state.cutIdx, (i) => {
+      state.cutIdx = i;
+      renderCanvases();
+    });
+    renderNetTabs();
+    renderPrintTileTabs();
+    renderCanvases();
+    renderTitleblocks(p);
+  }
+
+  function renderSummary(p, geo, cutSheets, baseFit, lidFit) {
+    const el = $("bm-summary");
+    const usableH = geo.totalHUsed - 2 * p.thickness;
+    el.innerHTML = `
+    <div class="srow"><span>${D.summary.baseInterior}</span><b>${geo.base.Li.toFixed(1)} × ${geo.base.Wi.toFixed(1)} × ${geo.baseTrayH.toFixed(1)} mm</b></div>
+    <div class="srow"><span>${D.summary.trayDepth}</span><b>${geo.baseTrayH.toFixed(1)} mm</b></div>
+    <div class="srow"><span>${D.summary.baseOuter}</span><b>${geo.base.Lo.toFixed(1)} × ${geo.base.Wo.toFixed(1)} × ${geo.baseExtH.toFixed(1)} mm</b></div>
+    <div class="srow"><span>${D.summary.lidOuter}</span><b class="${geo.footprintClamped ? "warn" : ""}">${geo.lid.Lo.toFixed(1)} × ${geo.lid.Wo.toFixed(1)} × ${geo.totalHUsed.toFixed(1)} mm${geo.footprintClamped ? " ⚠" : ""}</b></div>
+    <div class="srow"><span>${D.summary.totalHeight}</span><b class="${geo.clamped ? "warn" : ""}">${geo.totalHUsed.toFixed(1)} mm${geo.clamped ? " ⚠" : ""}</b></div>
+    <div class="srow"><span>${D.summary.usableSpace}</span><b>${usableH.toFixed(1)} mm</b></div>
+    <div class="srow"><span>${D.summary.piecesToCut}</span><b>${geo.cutPanels.length}</b></div>
+    <div class="srow"><span>${D.summary.laserSheets}</span><b class="${cutSheets.length > 1 ? "warn" : ""}">${cutSheets.length}</b></div>
+    <div class="srow"><span>${D.summary.baseWrap}</span><b class="${baseFit.grid.tiles.length > 1 ? "warn" : ""}">${baseFit.size.name} · ${baseFit.grid.tiles.length}p</b></div>
+    <div class="srow"><span>${D.summary.lidWrap}</span><b class="${lidFit.grid.tiles.length > 1 ? "warn" : ""}">${lidFit.size.name} · ${lidFit.grid.tiles.length}p</b></div>
+    ${geo.clamped ? `<div class="srow warn-row" style="justify-content:flex-start">${D.summary.warnHeight}</div>` : ""}
+    ${geo.footprintClamped ? `<div class="srow warn-row" style="justify-content:flex-start">${D.summary.warnFootprint}</div>` : ""}
+  `;
+  }
+
+  function renderSheetTabs(containerId, count, active, onClick) {
+    const c = $(containerId);
+    c.innerHTML = "";
+    for (let i = 0; i < count; i++) {
+      const b = document.createElement("button");
+      b.textContent = D.sheetTabPrefix + (i + 1);
+      if (i === active) b.classList.add("active");
+      b.onclick = () => {
+        c.querySelectorAll("button").forEach((x) => x.classList.remove("active"));
+        b.classList.add("active");
+        onClick(i);
+      };
+      c.appendChild(b);
+    }
+  }
+
+  function renderNetTabs() {
+    const c = $("bm-net-tabs");
+    c.innerHTML = "";
+    [
+      ["base", D.netLabels.base],
+      ["tampa", D.netLabels.tampa],
+    ].forEach(([key, lbl]) => {
+      const b = document.createElement("button");
+      b.textContent = D.netTabPrefix + lbl;
+      b.className = (key === "tampa" ? "net-lid" : "") + (state.activeNet === key ? " active" : "");
+      b.onclick = () => {
+        state.activeNet = key;
+        renderNetTabs();
+        renderPrintTileTabs();
+        renderCanvases();
+      };
+      c.appendChild(b);
+    });
+  }
+
+  function renderPrintTileTabs() {
+    const grid = state.grids[state.activeNet];
+    renderSheetTabs("bm-print-sheet-tabs", grid.tiles.length, state.tileIdx[state.activeNet], (i) => {
+      state.tileIdx[state.activeNet] = i;
+      renderCanvases();
+    });
+  }
+
+  function renderCanvases() {
+    const cutSvg = cutSheetSVG(state.cutSheets[state.cutIdx] || [], state.cutW, state.cutH, state.cutIdx, state.cutSheets.length);
+    $("bm-cut-canvas").innerHTML = cutSvg;
+
+    const net = state.nets[state.activeNet];
+    const fit = state.sheetInfo[state.activeNet];
+    const grid = fit.grid;
+    const idx = state.tileIdx[state.activeNet];
+    const tile = grid.tiles[idx];
+    const printSvg = tileSVG(net, tile, fit.size.w, fit.size.h, state.margin, state.overlap, grid.cols, grid.rows);
+    $("bm-print-canvas").innerHTML = printSvg;
+
+    $("bm-net-thumb").innerHTML = netThumbSVG(net, 200);
+    let noteExtra = "";
+    if (fit.grid.tiles.length === 1) {
+      noteExtra = fit.upgraded
+        ? D.fitsOneUpgraded(fit.size.name, fit.size.w, fit.size.h)
+        : D.fitsOne(fit.size.name, fit.size.w, fit.size.h);
+    } else {
+      noteExtra = D.needsTiling(grid.cols, grid.rows, fit.size.name);
+    }
+    $("bm-net-note").innerHTML = `<strong style="color:${COLORS.text}">${net.label}</strong><br>
+    ${D.unfoldedSize(net.width.toFixed(0), net.height.toFixed(0))} ${noteExtra}`;
+  }
+
+  function renderTitleblocks(p) {
+    $("bm-cut-titleblock").innerHTML = `
+    <div><b>${D.titleblock.piece}</b>${D.titleblock.pieceValue}</div>
+    <div><b>${D.titleblock.material}</b>${D.titleblock.materialValue(p.thickness)}</div>
+    <div><b>${D.titleblock.joints}</b>${D.titleblock.jointsValue}</div>
+    <div><b>${D.titleblock.kerf}</b>${p.kerf}mm</div>
+    <div><b>${D.titleblock.sheets}</b>${state.cutSheets.length} × ${state.cutW}×${state.cutH}mm</div>`;
+    const net = state.nets[state.activeNet];
+    const fit = state.sheetInfo[state.activeNet];
+    $("bm-print-titleblock").innerHTML = `
+    <div><b>${D.titleblock.piece}</b>${net.label}</div>
+    <div><b>${D.titleblock.rim}</b>${D.titleblock.rimValue(net.rim)}</div>
+    <div><b>${D.titleblock.corner}</b>${D.titleblock.cornerValue(net.c.toFixed(1))}</div>
+    <div><b>${D.titleblock.cornerCut}</b>${D.titleblock.cornerCutValue}</div>
+    <div><b>${D.titleblock.sheet}</b>${fit.size.name} · ${fit.grid.tiles.length} · ${fit.size.w}×${fit.size.h}mm</div>`;
+  }
+
+  function combinedCutSVG(sheets, sheetW, sheetH) {
+    const gap = 15;
+    const totalH = sheets.length * sheetH + (sheets.length - 1) * gap;
+    let s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${sheetW} ${totalH}" width="${sheetW}mm" height="${totalH}mm">`;
+    sheets.forEach((items, i) => {
+      const yOff = i * (sheetH + gap);
+      const inner = cutSheetSVG(items, sheetW, sheetH, i, sheets.length);
+      const body = inner.replace(/^<svg[^>]*>/, "").replace(/<\/svg>$/, "");
+      s += `<g transform="translate(0,${yOff})">${body}</g>`;
+    });
+    s += `</svg>`;
+    return s;
+  }
+
+  function combinedNetSVG(net, grid, sheetW, sheetH, margin, overlap) {
+    const gap = 15;
+    const cols = grid.cols,
+      rows = grid.rows;
+    const totalW = cols * sheetW + (cols - 1) * gap;
+    const totalH = rows * sheetH + (rows - 1) * gap;
+    let s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${totalW} ${totalH}" width="${totalW}mm" height="${totalH}mm">`;
+    grid.tiles.forEach((tile) => {
+      const xOff = tile.col * (sheetW + gap),
+        yOff = tile.row * (sheetH + gap);
+      const inner = tileSVG(net, tile, sheetW, sheetH, margin, overlap, cols, rows);
+      const body = inner.replace(/^<svg[^>]*>/, "").replace(/<\/svg>$/, "");
+      s += `<g transform="translate(${xOff},${yOff})">${body}</g>`;
+    });
+    s += `</svg>`;
+    return s;
+  }
+
+  function download(filename, content) {
+    const blob = new Blob([content], { type: "image/svg+xml" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  // ---------- eventos ----------
+  document.querySelectorAll(".bm-tabs button").forEach((b) => {
+    b.onclick = () => {
+      document.querySelectorAll(".bm-tabs button").forEach((x) => x.classList.remove("active"));
+      document.querySelectorAll(".bm-view").forEach((x) => x.classList.remove("active"));
+      b.classList.add("active");
+      $("bm-" + b.dataset.tab + "-view").classList.add("active");
+    };
+  });
+
+  $("bm-laser-preset").onchange = (e) => {
+    if (e.target.value === "custom") return;
+    const [w, h] = e.target.value.split("x").map(Number);
+    $("bm-laser-w").value = w;
+    $("bm-laser-h").value = h;
+    recompute();
+  };
+  $("bm-print-preset").onchange = (e) => {
+    if (e.target.value === "custom") return;
+    const [w, h] = e.target.value.split("x").map(Number);
+    $("bm-print-w").value = w;
+    $("bm-print-h").value = h;
+    recompute();
+  };
+
+  document.querySelectorAll('.bm-panel input[type="number"]').forEach((inp) => (inp.oninput = recompute));
+
+  $("bm-dl-cut-current").onclick = () =>
+    download(
+      `bitnik-box-cut-sheet${state.cutIdx + 1}.svg`,
+      cutSheetSVG(state.cutSheets[state.cutIdx], state.cutW, state.cutH, state.cutIdx, state.cutSheets.length)
+    );
+  $("bm-dl-cut-all").onclick = () => download("bitnik-box-cut-all-sheets.svg", combinedCutSVG(state.cutSheets, state.cutW, state.cutH));
+
+  $("bm-dl-print-current").onclick = () => {
+    const net = state.nets[state.activeNet],
+      fit = state.sheetInfo[state.activeNet],
+      idx = state.tileIdx[state.activeNet];
+    const slug = fit.size.name.replace(/[^a-z0-9]+/gi, "-");
+    download(
+      `bitnik-box-wrap-${state.activeNet}-${slug}-page${idx + 1}.svg`,
+      tileSVG(net, fit.grid.tiles[idx], fit.size.w, fit.size.h, state.margin, state.overlap, fit.grid.cols, fit.grid.rows)
+    );
+  };
+  $("bm-dl-print-all").onclick = () => {
+    const net = state.nets[state.activeNet],
+      fit = state.sheetInfo[state.activeNet];
+    const slug = fit.size.name.replace(/[^a-z0-9]+/gi, "-");
+    download(`bitnik-box-wrap-${state.activeNet}-${slug}-all-pages.svg`, combinedNetSVG(net, fit.grid, fit.size.w, fit.size.h, state.margin, state.overlap));
+  };
+
+  recompute();
+</script>
