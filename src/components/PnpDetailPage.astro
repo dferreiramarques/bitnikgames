@@ -5,6 +5,7 @@ import Layout from "../layouts/Layout.astro";
 import Badge from "./Badge.astro";
 import { pathTo, type Locale } from "../i18n/routes";
 import { t } from "../i18n/ui";
+import { pnpBadge } from "../lib/badges";
 
 interface Props {
   locale: Locale;
@@ -14,17 +15,13 @@ interface Props {
 
 const { locale, entry, slug } = Astro.props;
 const copy = t(locale).pnp;
-const badges = t(locale).badges;
+const nav = t(locale).nav;
 const otherLocale: Locale = locale === "pt" ? "en" : "pt";
 const { title, shortDescription, access, price, fileUrl, players, duration, tags } = entry.data;
 const { Content } = await render(entry);
 
-const badgeByAccess = {
-  free: { variant: "free" as const, label: badges.free },
-  paid: { variant: "paid" as const, label: price ?? badges.paid },
-  pwyw: { variant: "pwyw" as const, label: badges.pwyw },
-};
-const badge = badgeByAccess[access];
+const badge = pnpBadge(locale, access, price);
+const fileReady = fileUrl !== "#";
 ---
 
 <Layout
@@ -38,7 +35,7 @@ const badge = badgeByAccess[access];
       <div class="detail-media" aria-hidden="true">{title}</div>
 
       <div class="detail-body">
-        <a class="back-link" href={pathTo(locale, "printAndPlay")}>&larr; {copy.title}</a>
+        <a class="back-link" href={pathTo(locale, "printAndPlay")}>&larr; {nav.printAndPlay}</a>
         <Badge variant={badge.variant} label={badge.label} />
         <h1>{title}</h1>
         <p class="detail-lede">{shortDescription}</p>
@@ -47,11 +44,11 @@ const badge = badgeByAccess[access];
           <ul class="detail-meta">
             {players && (
               <li>
-                <strong>{players.min === players.max ? players.min : `${players.min}–${players.max}`}</strong>
+                <strong>{players.min === players.max ? players.min : `${players.min}–${players.max}`}</strong> {copy.players}
               </li>
             )}
             {duration && (
-              <li><strong>{duration}</strong> min</li>
+              <li><strong>{duration}</strong> {copy.duration}</li>
             )}
           </ul>
         )}
@@ -65,9 +62,15 @@ const badge = badgeByAccess[access];
         )}
 
         <div class="detail-cta">
-          <a class="btn btn-primary" href={fileUrl} download>
-            {copy.download}
-          </a>
+          {fileReady ? (
+            <a class="btn btn-primary" href={fileUrl} download>
+              {copy.download}
+            </a>
+          ) : (
+            <button class="btn btn-primary" type="button" disabled title={copy.downloadPlaceholder}>
+              {copy.download}
+            </button>
+          )}
         </div>
 
         <div class="detail-content">
@@ -77,87 +80,3 @@ const badge = badgeByAccess[access];
     </div>
   </article>
 </Layout>
-
-<style>
-  .detail-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem;
-    align-items: start;
-  }
-
-  .detail-media {
-    aspect-ratio: 1;
-    border-radius: var(--radius-lg);
-    background: linear-gradient(135deg, var(--color-yellow), var(--color-orange) 55%, var(--color-brick));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--color-white);
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 1.4rem;
-    text-align: center;
-    padding: 2rem;
-    position: sticky;
-    top: 100px;
-  }
-
-  .back-link {
-    display: inline-block;
-    color: var(--text-muted);
-    font-weight: 600;
-    margin-bottom: 1rem;
-  }
-
-  .detail-body > :global(.badge) {
-    margin-bottom: 0.75rem;
-  }
-
-  .detail-lede {
-    font-size: 1.1rem;
-    color: var(--text-muted);
-  }
-
-  .detail-meta {
-    display: flex;
-    gap: 1.25rem;
-    flex-wrap: wrap;
-    margin: 1.25rem 0;
-    color: var(--text-muted);
-  }
-
-  .detail-tags {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-    margin-bottom: 1.5rem;
-  }
-
-  .detail-tags li {
-    font-size: 0.8rem;
-    font-weight: 600;
-    background: var(--bg-alt);
-    border-radius: var(--radius-pill);
-    padding: 0.3rem 0.75rem;
-  }
-
-  .detail-cta {
-    margin-bottom: 2rem;
-  }
-
-  .detail-content {
-    border-top: 1px solid var(--border);
-    padding-top: 1.75rem;
-  }
-
-  @media (max-width: 800px) {
-    .detail-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .detail-media {
-      position: static;
-    }
-  }
-</style>

@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro check && astro build",
+    "check:locales": "node scripts/check-locale-parity.mjs",
+    "build": "npm run check:locales && astro check && astro build",
     "preview": "astro preview",
     "astro": "astro"
   },

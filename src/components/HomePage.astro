@@ -107,11 +107,12 @@ const slugOf = (id: string) => id.split("/").slice(1).join("/");
         <h2>{copy.newsletterTitle}</h2>
         <p>{copy.newsletterSubtitle}</p>
       </div>
-      <form class="newsletter-form" id="newsletter-form">
+      <form class="newsletter-form" id="newsletter-form" data-success-message={copy.newsletterSuccess}>
         <label class="visually-hidden" for="newsletter-email">Email</label>
         <input id="newsletter-email" type="email" required placeholder={copy.newsletterPlaceholder} />
         <button class="btn btn-secondary" type="submit">{copy.newsletterCta}</button>
       </form>
+      <p class="newsletter-success" id="newsletter-success" role="status" hidden></p>
     </div>
   </section>
 </Layout>
@@ -159,17 +160,25 @@ const slugOf = (id: string) => id.split("/").slice(1).join("/");
   }
 
   .newsletter {
-    background: linear-gradient(120deg, var(--color-brick) 0%, var(--color-orange) 55%, var(--color-yellow) 100%);
+    background: linear-gradient(120deg, var(--color-brick) 0%, var(--color-brick-deep) 45%, var(--color-orange) 80%, var(--color-yellow) 100%);
     color: var(--color-white);
     padding-block: clamp(2.5rem, 5vw, 4rem);
   }
 
   .newsletter h2 {
     color: var(--color-white);
+    text-shadow: 0 1px 3px rgba(43, 27, 18, 0.35);
   }
 
   .newsletter p {
-    color: color-mix(in srgb, var(--color-white) 85%, transparent);
+    color: color-mix(in srgb, var(--color-white) 92%, transparent);
+    text-shadow: 0 1px 3px rgba(43, 27, 18, 0.3);
+  }
+
+  .newsletter-success {
+    margin-top: 0.75rem;
+    font-weight: 600;
+    text-shadow: 0 1px 3px rgba(43, 27, 18, 0.3);
   }
 
   .newsletter-inner {
@@ -203,8 +212,15 @@ const slugOf = (id: string) => id.split("/").slice(1).join("/");
   // Placeholder de newsletter: por agora só evita o reload da página.
   // Substituir por uma chamada real (ex. Mailchimp, Buttondown, ConvertKit)
   // quando houver um serviço de email escolhido.
-  const form = document.getElementById("newsletter-form");
+  const form = document.getElementById("newsletter-form") as HTMLFormElement | null;
+  const success = document.getElementById("newsletter-success");
+
   form?.addEventListener("submit", (event) => {
     event.preventDefault();
+    if (success) {
+      success.textContent = form.dataset.successMessage ?? "";
+      success.hidden = false;
+    }
+    form.hidden = true;
   });
 </script>
