@@ -57,11 +57,7 @@ const slugOf = (id: string) => id.split("/").slice(1).join("/");
         </div>
 
         <div class="piece-orbit piece-card">
-          <div class="piece-face piece-card-face">
-            <div class="piece-card-art"></div>
-            <div class="piece-card-line"></div>
-            <div class="piece-card-line short"></div>
-          </div>
+          <img class="piece-face piece-character piece-character-lg" src="/characters/capivaras.png" alt="" width="124" height="101" />
         </div>
 
         <div class="piece-orbit piece-hex">
@@ -284,41 +280,16 @@ const slugOf = (id: string) => id.split("/").slice(1).join("/");
     grid-area: 3 / 3;
   }
 
-  .piece-card-face {
-    width: 104px;
-    height: 140px;
-    padding: 10px;
-    border-radius: var(--radius-md);
-    background: var(--color-white);
-    border: 3px solid var(--color-ink);
-    transform: rotate(8deg);
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .piece-card-art {
-    flex: 1;
-    border-radius: var(--radius-sm);
-    background: linear-gradient(135deg, var(--color-yellow), var(--color-orange) 55%, var(--color-brick));
-  }
-
-  .piece-card-line {
-    height: 6px;
-    border-radius: var(--radius-pill);
-    background: var(--color-cream-strong);
-  }
-
-  .piece-card-line.short {
-    width: 55%;
-  }
-
   .piece-hex-face {
     width: 96px;
     height: 96px;
     background: linear-gradient(160deg, var(--color-orange), var(--color-brick));
     clip-path: polygon(25% 4%, 75% 4%, 100% 50%, 75% 96%, 25% 96%, 0% 50%);
     transform: rotate(-5deg);
+  }
+
+  .piece-character.piece-character-lg {
+    width: 124px;
   }
 
   .piece-character {
