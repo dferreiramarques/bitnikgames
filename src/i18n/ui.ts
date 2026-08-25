@@ -32,6 +32,7 @@ export const ui = {
       newsletterSubtitle: "Aviso quando sai um jogo, um print & play novo, ou um post que vale a pena ler.",
       newsletterPlaceholder: "o-teu-email@exemplo.com",
       newsletterCta: "Subscrever",
+      newsletterSuccess: "Obrigado! Ainda não temos newsletter a sério — mas guardámos a tua vontade de a receber.",
     },
     catalog: {
       eyebrow: "Catálogo",
@@ -40,12 +41,16 @@ export const ui = {
       players: "jogadores",
       duration: "min",
       age: "anos+",
+      checkoutPlaceholder: "Checkout placeholder — a ligar em breve",
     },
     pnp: {
       eyebrow: "Print & Play",
       title: "Joga já, em casa",
       subtitle: "Descarrega, imprime, corta e joga. Alguns são totalmente gratuitos, outros pay-what-you-want ou pagos.",
       download: "Descarregar PDF",
+      players: "jogadores",
+      duration: "min",
+      downloadPlaceholder: "Ficheiro placeholder — a caminho em breve",
     },
     blog: {
       eyebrow: "Blog",
@@ -108,6 +113,7 @@ export const ui = {
       newsletterSubtitle: "Get notified when a new game, print & play, or worthwhile post goes live.",
       newsletterPlaceholder: "your-email@example.com",
       newsletterCta: "Subscribe",
+      newsletterSuccess: "Thanks! We don't have a real newsletter yet — but we've noted you'd like one.",
     },
     catalog: {
       eyebrow: "Catalog",
@@ -116,12 +122,16 @@ export const ui = {
       players: "players",
       duration: "min",
       age: "yrs+",
+      checkoutPlaceholder: "Checkout placeholder — coming soon",
     },
     pnp: {
       eyebrow: "Print & Play",
       title: "Play it now, at home",
       subtitle: "Download, print, cut, and play. Some are completely free, others pay-what-you-want or paid.",
       download: "Download PDF",
+      players: "players",
+      duration: "min",
+      downloadPlaceholder: "File placeholder — coming soon",
     },
     blog: {
       eyebrow: "Blog",

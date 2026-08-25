@@ -7,20 +7,27 @@ import { glob } from "astro/loaders";
 
 const games = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/games" }),
-  schema: z.object({
-    title: z.string(),
-    shortDescription: z.string(),
-    players: z.object({ min: z.number(), max: z.number() }),
-    duration: z.number(), // minutos
-    age: z.number(),
-    status: z.enum(["buy-now", "buy-external", "coming-soon"]),
-    price: z.string().optional(),
-    externalUrl: z.string().url().optional(),
-    externalLabel: z.string().optional(),
-    tags: z.array(z.string()).default([]),
-    featured: z.boolean().default(false),
-    publishedDate: z.coerce.date(),
-  }),
+  schema: z
+    .object({
+      title: z.string(),
+      shortDescription: z.string(),
+      players: z.object({ min: z.number(), max: z.number() }),
+      duration: z.number(), // minutos
+      age: z.number(),
+      status: z.enum(["buy-now", "buy-external", "coming-soon"]),
+      price: z.string().optional(),
+      externalUrl: z.string().url().optional(),
+      externalLabel: z.string().optional(),
+      tags: z.array(z.string()).default([]),
+      featured: z.boolean().default(false),
+      publishedDate: z.coerce.date(),
+    })
+    // status "buy-external" sem externalUrl faz o botão de compra desaparecer
+    // silenciosamente na página do jogo — falhar aqui em vez de em produção.
+    .refine((data) => data.status !== "buy-external" || Boolean(data.externalUrl), {
+      message: "externalUrl é obrigatório quando status é \"buy-external\"",
+      path: ["externalUrl"],
+    }),
 });
 
 const pnp = defineCollection({

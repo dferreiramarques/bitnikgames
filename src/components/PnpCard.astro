@@ -2,7 +2,7 @@
 import type { CollectionEntry } from "astro:content";
 import Badge from "./Badge.astro";
 import { pathTo, type Locale } from "../i18n/routes";
-import { t } from "../i18n/ui";
+import { pnpBadge } from "../lib/badges";
 
 interface Props {
   locale: Locale;
@@ -11,16 +11,9 @@ interface Props {
 }
 
 const { locale, item, slug } = Astro.props;
-const badges = t(locale).badges;
 const { title, shortDescription, access, price } = item.data;
 
-const badgeByAccess = {
-  free: { variant: "free" as const, label: badges.free },
-  paid: { variant: "paid" as const, label: price ?? badges.paid },
-  pwyw: { variant: "pwyw" as const, label: badges.pwyw },
-};
-
-const badge = badgeByAccess[access];
+const badge = pnpBadge(locale, access, price);
 const href = pathTo(locale, "printAndPlay", slug);
 ---
 

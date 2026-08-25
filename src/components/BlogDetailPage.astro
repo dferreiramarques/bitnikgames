@@ -13,6 +13,7 @@ interface Props {
 
 const { locale, entry, slug } = Astro.props;
 const copy = t(locale).blog;
+const nav = t(locale).nav;
 const otherLocale: Locale = locale === "pt" ? "en" : "pt";
 const { title, excerpt, readingMinutes, tags, publishedDate } = entry.data;
 const { Content } = await render(entry);
@@ -27,7 +28,7 @@ const dateFormatted = publishedDate.toLocaleDateString(locale === "pt" ? "pt-PT"
 <Layout locale={locale} altPath={pathTo(otherLocale, "blog", slug)} title={title} description={excerpt}>
   <article class="section detail">
     <div class="container detail-narrow">
-      <a class="back-link" href={pathTo(locale, "blog")}>&larr; {copy.title}</a>
+      <a class="back-link" href={pathTo(locale, "blog")}>&larr; {nav.blog}</a>
       <p class="post-meta">{dateFormatted} · {readingMinutes} {copy.minRead}</p>
       <h1>{title}</h1>
       <p class="detail-lede">{excerpt}</p>
@@ -53,9 +54,6 @@ const dateFormatted = publishedDate.toLocaleDateString(locale === "pt" ? "pt-PT"
   }
 
   .back-link {
-    display: inline-block;
-    color: var(--text-muted);
-    font-weight: 600;
     margin-bottom: 1.5rem;
   }
 
@@ -65,34 +63,7 @@ const dateFormatted = publishedDate.toLocaleDateString(locale === "pt" ? "pt-PT"
     margin-bottom: 0.5rem;
   }
 
-  .detail-lede {
-    font-size: 1.1rem;
-    color: var(--text-muted);
-  }
-
-  .detail-tags {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-    margin-bottom: 1.5rem;
-  }
-
-  .detail-tags li {
-    font-size: 0.8rem;
-    font-weight: 600;
-    background: var(--bg-alt);
-    border-radius: var(--radius-pill);
-    padding: 0.3rem 0.75rem;
-  }
-
   .detail-content {
-    border-top: 1px solid var(--border);
-    padding-top: 1.75rem;
     font-size: 1.05rem;
-  }
-
-  .detail-content :global(h2) {
-    font-size: 1.4rem;
-    margin-top: 1.75rem;
   }
 </style>
