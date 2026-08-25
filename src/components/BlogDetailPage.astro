@@ -1,0 +1,98 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { render } from "astro:content";
+import Layout from "../layouts/Layout.astro";
+import { pathTo, type Locale } from "../i18n/routes";
+import { t } from "../i18n/ui";
+
+interface Props {
+  locale: Locale;
+  entry: CollectionEntry<"posts">;
+  slug: string;
+}
+
+const { locale, entry, slug } = Astro.props;
+const copy = t(locale).blog;
+const otherLocale: Locale = locale === "pt" ? "en" : "pt";
+const { title, excerpt, readingMinutes, tags, publishedDate } = entry.data;
+const { Content } = await render(entry);
+
+const dateFormatted = publishedDate.toLocaleDateString(locale === "pt" ? "pt-PT" : "en-GB", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
+---
+
+<Layout locale={locale} altPath={pathTo(otherLocale, "blog", slug)} title={title} description={excerpt}>
+  <article class="section detail">
+    <div class="container detail-narrow">
+      <a class="back-link" href={pathTo(locale, "blog")}>&larr; {copy.title}</a>
+      <p class="post-meta">{dateFormatted} · {readingMinutes} {copy.minRead}</p>
+      <h1>{title}</h1>
+      <p class="detail-lede">{excerpt}</p>
+
+      {tags.length > 0 && (
+        <ul class="detail-tags">
+          {tags.map((tagName) => (
+            <li>{tagName}</li>
+          ))}
+        </ul>
+      )}
+
+      <div class="detail-content">
+        <Content />
+      </div>
+    </div>
+  </article>
+</Layout>
+
+<style>
+  .detail-narrow {
+    max-width: 720px;
+  }
+
+  .back-link {
+    display: inline-block;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+  }
+
+  .post-meta {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .detail-lede {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+  }
+
+  .detail-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+
+  .detail-tags li {
+    font-size: 0.8rem;
+    font-weight: 600;
+    background: var(--bg-alt);
+    border-radius: var(--radius-pill);
+    padding: 0.3rem 0.75rem;
+  }
+
+  .detail-content {
+    border-top: 1px solid var(--border);
+    padding-top: 1.75rem;
+    font-size: 1.05rem;
+  }
+
+  .detail-content :global(h2) {
+    font-size: 1.4rem;
+    margin-top: 1.75rem;
+  }
+</style>

@@ -1,0 +1,160 @@
+import type { Locale } from "./routes";
+
+export const ui = {
+  pt: {
+    nav: {
+      catalog: "Catálogo",
+      printAndPlay: "Print & Play",
+      blog: "Blog",
+      about: "Sobre",
+      lang: "EN",
+    },
+    home: {
+      eyebrow: "Publisher independente de jogos de tabuleiro",
+      title: "Jogos pequenos, ideias grandes.",
+      subtitle:
+        "A bitnikgames desenha, testa e publica jogos de tabuleiro — do print & play gratuito à caixa acabada. Este é o nosso catálogo, os nossos protótipos e as ideias por trás deles.",
+      ctaCatalog: "Ver catálogo",
+      ctaPnp: "Explorar print & play",
+      gamesEyebrow: "Catálogo",
+      gamesTitle: "Jogos publicados",
+      gamesSubtitle: "Uma seleção do que já saiu da mesa de protótipos.",
+      gamesCta: "Ver todos os jogos",
+      pnpEyebrow: "Print & Play",
+      pnpTitle: "Imprime, corta, joga",
+      pnpSubtitle: "Protótipos e jogos leves prontos a imprimir em casa — alguns grátis, outros pay-what-you-want.",
+      pnpCta: "Ver todos os print & play",
+      blogEyebrow: "Blog",
+      blogTitle: "Notas de game design",
+      blogSubtitle: "Processo, decisões e falhas úteis por trás de cada jogo.",
+      blogCta: "Ler o blog",
+      newsletterTitle: "Um jogo novo, uma ideia nova — sem spam",
+      newsletterSubtitle: "Aviso quando sai um jogo, um print & play novo, ou um post que vale a pena ler.",
+      newsletterPlaceholder: "o-teu-email@exemplo.com",
+      newsletterCta: "Subscrever",
+    },
+    catalog: {
+      eyebrow: "Catálogo",
+      title: "Os jogos da bitnikgames",
+      subtitle: "De protótipos afiados a caixas prontas para a mesa. Cada jogo tem a sua própria forma de chegar até ti.",
+      players: "jogadores",
+      duration: "min",
+      age: "anos+",
+    },
+    pnp: {
+      eyebrow: "Print & Play",
+      title: "Joga já, em casa",
+      subtitle: "Descarrega, imprime, corta e joga. Alguns são totalmente gratuitos, outros pay-what-you-want ou pagos.",
+      download: "Descarregar PDF",
+    },
+    blog: {
+      eyebrow: "Blog",
+      title: "Notas de game design",
+      subtitle: "Ideias, decisões de design e o que aprendemos a testar jogos com pessoas reais.",
+      readMore: "Ler artigo",
+      minRead: "min de leitura",
+    },
+    about: {
+      eyebrow: "Sobre",
+      title: "Quem é a bitnikgames",
+      body1:
+        "A bitnikgames é uma publisher independente de jogos de tabuleiro. Fazemos jogos pequenos e afiados, testamo-los à exaustão à volta da mesa, e partilhamos o processo — nem sempre bonito — no blog.",
+      body2:
+        "Alguns jogos ficam disponíveis como print & play antes (ou em vez) de virem a existir como caixa física. Isso ajuda-nos a testar ideias com mais gente, mais depressa.",
+    },
+    badges: {
+      buyNow: "Comprar",
+      buyExternal: "Disponível externamente",
+      comingSoon: "Brevemente",
+      free: "Grátis",
+      paid: "Pago",
+      pwyw: "Paga o que quiseres",
+    },
+    footer: {
+      tagline: "Jogos de tabuleiro independentes, feitos à mesa.",
+      nav: "Navegação",
+      follow: "Segue-nos",
+      rights: "Todos os direitos reservados.",
+    },
+  },
+  en: {
+    nav: {
+      catalog: "Catalog",
+      printAndPlay: "Print & Play",
+      blog: "Blog",
+      about: "About",
+      lang: "PT",
+    },
+    home: {
+      eyebrow: "Independent board game publisher",
+      title: "Small games, big ideas.",
+      subtitle:
+        "bitnikgames designs, tests, and publishes board games — from free print & play files to finished boxes. This is our catalog, our prototypes, and the ideas behind them.",
+      ctaCatalog: "Browse the catalog",
+      ctaPnp: "Explore print & play",
+      gamesEyebrow: "Catalog",
+      gamesTitle: "Published games",
+      gamesSubtitle: "A selection of what's already left the prototyping table.",
+      gamesCta: "See all games",
+      pnpEyebrow: "Print & Play",
+      pnpTitle: "Print it, cut it, play it",
+      pnpSubtitle: "Prototypes and light games ready to print at home — some free, some pay-what-you-want.",
+      pnpCta: "See all print & play",
+      blogEyebrow: "Blog",
+      blogTitle: "Game design notes",
+      blogSubtitle: "Process, decisions, and useful failures behind each game.",
+      blogCta: "Read the blog",
+      newsletterTitle: "A new game, a new idea — no spam",
+      newsletterSubtitle: "Get notified when a new game, print & play, or worthwhile post goes live.",
+      newsletterPlaceholder: "your-email@example.com",
+      newsletterCta: "Subscribe",
+    },
+    catalog: {
+      eyebrow: "Catalog",
+      title: "The bitnikgames library",
+      subtitle: "From sharp prototypes to finished boxes. Every game has its own way of reaching you.",
+      players: "players",
+      duration: "min",
+      age: "yrs+",
+    },
+    pnp: {
+      eyebrow: "Print & Play",
+      title: "Play it now, at home",
+      subtitle: "Download, print, cut, and play. Some are completely free, others pay-what-you-want or paid.",
+      download: "Download PDF",
+    },
+    blog: {
+      eyebrow: "Blog",
+      title: "Game design notes",
+      subtitle: "Ideas, design decisions, and what we learn playtesting with real people.",
+      readMore: "Read article",
+      minRead: "min read",
+    },
+    about: {
+      eyebrow: "About",
+      title: "Who's behind bitnikgames",
+      body1:
+        "bitnikgames is an independent board game publisher. We make small, sharp games, test them relentlessly around the table, and share the process — not always pretty — on the blog.",
+      body2:
+        "Some games are released as print & play before (or instead of) becoming a physical box. That helps us test ideas with more people, faster.",
+    },
+    badges: {
+      buyNow: "Buy now",
+      buyExternal: "Available externally",
+      comingSoon: "Coming soon",
+      free: "Free",
+      paid: "Paid",
+      pwyw: "Pay what you want",
+    },
+    footer: {
+      tagline: "Independent board games, made at the table.",
+      nav: "Navigation",
+      follow: "Follow",
+      rights: "All rights reserved.",
+    },
+  },
+} as const;
+
+export function t(locale: Locale) {
+  return ui[locale];
+}

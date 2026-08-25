@@ -1,0 +1,16 @@
+---
+import { getCollection } from "astro:content";
+import PnpDetailPage from "../../../components/PnpDetailPage.astro";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("pnp", ({ id }) => id.startsWith("pt/"));
+  return entries.map((entry) => {
+    const slug = entry.id.split("/").slice(1).join("/");
+    return { params: { slug }, props: { entry, slug } };
+  });
+}
+
+const { entry, slug } = Astro.props;
+---
+
+<PnpDetailPage locale="pt" entry={entry} slug={slug} />

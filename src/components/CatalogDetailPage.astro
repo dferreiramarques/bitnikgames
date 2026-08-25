@@ -1,0 +1,176 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { render } from "astro:content";
+import Layout from "../layouts/Layout.astro";
+import Badge from "./Badge.astro";
+import { pathTo, type Locale } from "../i18n/routes";
+import { t } from "../i18n/ui";
+
+interface Props {
+  locale: Locale;
+  entry: CollectionEntry<"games">;
+  slug: string;
+}
+
+const { locale, entry, slug } = Astro.props;
+const copy = t(locale).catalog;
+const badges = t(locale).badges;
+const otherLocale: Locale = locale === "pt" ? "en" : "pt";
+const { title, shortDescription, players, duration, age, status, price, externalUrl, externalLabel, tags } =
+  entry.data;
+const { Content } = await render(entry);
+
+const badgeByStatus = {
+  "buy-now": { variant: "paid" as const, label: badges.buyNow },
+  "buy-external": { variant: "external" as const, label: badges.buyExternal },
+  "coming-soon": { variant: "soon" as const, label: badges.comingSoon },
+};
+const badge = badgeByStatus[status];
+---
+
+<Layout
+  locale={locale}
+  altPath={pathTo(otherLocale, "catalog", slug)}
+  title={title}
+  description={shortDescription}
+>
+  <article class="section detail">
+    <div class="container detail-grid">
+      <div class="detail-media" aria-hidden="true">{title}</div>
+
+      <div class="detail-body">
+        <a class="back-link" href={pathTo(locale, "catalog")}>&larr; {copy.title}</a>
+        <Badge variant={badge.variant} label={badge.label} />
+        <h1>{title}</h1>
+        <p class="detail-lede">{shortDescription}</p>
+
+        <ul class="detail-meta">
+          <li><strong>{players.min === players.max ? players.min : `${players.min}–${players.max}`}</strong> {copy.players}</li>
+          <li><strong>{duration}</strong> {copy.duration}</li>
+          <li><strong>{age}{copy.age}</strong></li>
+        </ul>
+
+        {tags.length > 0 && (
+          <ul class="detail-tags">
+            {tags.map((tagName) => (
+              <li>{tagName}</li>
+            ))}
+          </ul>
+        )}
+
+        <div class="detail-cta">
+          {status === "buy-now" && (
+            <button class="btn btn-primary" type="button" disabled title="Checkout placeholder — a ligar em breve">
+              {badges.buyNow} {price ? `· ${price}` : null}
+            </button>
+          )}
+          {status === "buy-external" && externalUrl && (
+            <a class="btn btn-primary" href={externalUrl} target="_blank" rel="noreferrer">
+              {externalLabel ?? badges.buyExternal}
+            </a>
+          )}
+          {status === "coming-soon" && (
+            <span class="btn btn-outline" aria-disabled="true">{badges.comingSoon}</span>
+          )}
+        </div>
+
+        <div class="detail-content">
+          <Content />
+        </div>
+      </div>
+    </div>
+  </article>
+</Layout>
+
+<style>
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .detail-media {
+    aspect-ratio: 1;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(135deg, var(--color-yellow), var(--color-orange) 55%, var(--color-brick));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-white);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.4rem;
+    text-align: center;
+    padding: 2rem;
+    position: sticky;
+    top: 100px;
+  }
+
+  .back-link {
+    display: inline-block;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  .detail-body > :global(.badge) {
+    margin-bottom: 0.75rem;
+  }
+
+  .detail-lede {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+  }
+
+  .detail-meta {
+    display: flex;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    margin: 1.25rem 0;
+    color: var(--text-muted);
+  }
+
+  .detail-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+
+  .detail-tags li {
+    font-size: 0.8rem;
+    font-weight: 600;
+    background: var(--bg-alt);
+    border-radius: var(--radius-pill);
+    padding: 0.3rem 0.75rem;
+  }
+
+  .detail-cta {
+    margin-bottom: 2rem;
+  }
+
+  .detail-cta button[disabled] {
+    opacity: 0.75;
+    cursor: not-allowed;
+  }
+
+  .detail-content {
+    border-top: 1px solid var(--border);
+    padding-top: 1.75rem;
+  }
+
+  .detail-content :global(h2) {
+    font-size: 1.4rem;
+  }
+
+  @media (max-width: 800px) {
+    .detail-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .detail-media {
+      position: static;
+    }
+  }
+</style>

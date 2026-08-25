@@ -1,0 +1,60 @@
+---
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+import type { Locale } from "../i18n/routes";
+import "../styles/global.css";
+
+interface Props {
+  locale: Locale;
+  altPath: string;
+  title: string;
+  description: string;
+}
+
+const { locale, altPath, title, description } = Astro.props;
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title} · bitnikgames</title>
+    <meta name="description" content={description} />
+    <link rel="alternate" hreflang={locale} href={Astro.url.pathname} />
+    <link rel="alternate" hreflang={locale === "pt" ? "en" : "pt"} href={altPath} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Nav locale={locale} altPath={altPath} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer locale={locale} />
+  </body>
+</html>
+
+<style is:global>
+  .skip-link {
+    position: absolute;
+    left: -999px;
+    top: 0;
+    background: var(--color-ink);
+    color: var(--color-cream);
+    padding: 0.6rem 1rem;
+    z-index: 100;
+    border-radius: 0 0 8px 0;
+  }
+
+  .skip-link:focus {
+    left: 0;
+  }
+</style>

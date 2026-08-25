@@ -1,0 +1,113 @@
+---
+import { pathTo, type Locale } from "../i18n/routes";
+import { t } from "../i18n/ui";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = t(locale).footer;
+const nav = t(locale).nav;
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <a href={pathTo(locale, "home")} class="logo">bitnikgames</a>
+      <p>{copy.tagline}</p>
+    </div>
+
+    <div class="footer-col">
+      <h3>{copy.nav}</h3>
+      <ul>
+        <li><a href={pathTo(locale, "catalog")}>{nav.catalog}</a></li>
+        <li><a href={pathTo(locale, "printAndPlay")}>{nav.printAndPlay}</a></li>
+        <li><a href={pathTo(locale, "blog")}>{nav.blog}</a></li>
+        <li><a href={pathTo(locale, "about")}>{nav.about}</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h3>{copy.follow}</h3>
+      <ul>
+        <li><a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a></li>
+        <li><a href="https://boardgamegeek.com" target="_blank" rel="noreferrer">BoardGameGeek</a></li>
+        <li><a href="https://itch.io" target="_blank" rel="noreferrer">itch.io</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container footer-bottom">
+    <p>&copy; {year} bitnikgames. {copy.rights}</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--color-ink);
+    color: var(--color-cream);
+    margin-top: 4rem;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 2.5rem;
+    padding-block: 3.5rem 2.5rem;
+  }
+
+  .footer-brand .logo {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: var(--color-cream);
+  }
+
+  .footer-brand p {
+    color: color-mix(in srgb, var(--color-cream) 65%, transparent);
+    margin-top: 0.6rem;
+    max-width: 30ch;
+  }
+
+  .footer-col h3 {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-yellow);
+    margin-bottom: 0.9rem;
+  }
+
+  .footer-col ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .footer-col a {
+    color: color-mix(in srgb, var(--color-cream) 85%, transparent);
+  }
+
+  .footer-col a:hover {
+    color: var(--color-yellow);
+  }
+
+  .footer-bottom {
+    border-top: 1px solid color-mix(in srgb, var(--color-cream) 15%, transparent);
+    padding-block: 1.25rem;
+    font-size: 0.85rem;
+    color: color-mix(in srgb, var(--color-cream) 55%, transparent);
+  }
+
+  @media (max-width: 700px) {
+    .footer-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .footer-brand {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

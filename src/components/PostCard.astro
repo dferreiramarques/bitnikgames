@@ -1,0 +1,34 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { pathTo, type Locale } from "../i18n/routes";
+import { t } from "../i18n/ui";
+
+interface Props {
+  locale: Locale;
+  post: CollectionEntry<"posts">;
+  slug: string;
+}
+
+const { locale, post, slug } = Astro.props;
+const copy = t(locale).blog;
+const { title, excerpt, readingMinutes, publishedDate } = post.data;
+const href = pathTo(locale, "blog", slug);
+
+const dateFormatted = publishedDate.toLocaleDateString(locale === "pt" ? "pt-PT" : "en-GB", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
+---
+
+<a class="card" href={href}>
+  <div class="card-media" aria-hidden="true">{title}</div>
+  <div class="card-body">
+    <div class="card-meta">
+      <span>{dateFormatted}</span>
+      <span>{readingMinutes} {copy.minRead}</span>
+    </div>
+    <h3 class="card-title">{title}</h3>
+    <p class="card-excerpt">{excerpt}</p>
+  </div>
+</a>

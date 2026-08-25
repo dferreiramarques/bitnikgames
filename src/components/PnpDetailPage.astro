@@ -1,0 +1,163 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { render } from "astro:content";
+import Layout from "../layouts/Layout.astro";
+import Badge from "./Badge.astro";
+import { pathTo, type Locale } from "../i18n/routes";
+import { t } from "../i18n/ui";
+
+interface Props {
+  locale: Locale;
+  entry: CollectionEntry<"pnp">;
+  slug: string;
+}
+
+const { locale, entry, slug } = Astro.props;
+const copy = t(locale).pnp;
+const badges = t(locale).badges;
+const otherLocale: Locale = locale === "pt" ? "en" : "pt";
+const { title, shortDescription, access, price, fileUrl, players, duration, tags } = entry.data;
+const { Content } = await render(entry);
+
+const badgeByAccess = {
+  free: { variant: "free" as const, label: badges.free },
+  paid: { variant: "paid" as const, label: price ?? badges.paid },
+  pwyw: { variant: "pwyw" as const, label: badges.pwyw },
+};
+const badge = badgeByAccess[access];
+---
+
+<Layout
+  locale={locale}
+  altPath={pathTo(otherLocale, "printAndPlay", slug)}
+  title={title}
+  description={shortDescription}
+>
+  <article class="section detail">
+    <div class="container detail-grid">
+      <div class="detail-media" aria-hidden="true">{title}</div>
+
+      <div class="detail-body">
+        <a class="back-link" href={pathTo(locale, "printAndPlay")}>&larr; {copy.title}</a>
+        <Badge variant={badge.variant} label={badge.label} />
+        <h1>{title}</h1>
+        <p class="detail-lede">{shortDescription}</p>
+
+        {(players || duration) && (
+          <ul class="detail-meta">
+            {players && (
+              <li>
+                <strong>{players.min === players.max ? players.min : `${players.min}–${players.max}`}</strong>
+              </li>
+            )}
+            {duration && (
+              <li><strong>{duration}</strong> min</li>
+            )}
+          </ul>
+        )}
+
+        {tags.length > 0 && (
+          <ul class="detail-tags">
+            {tags.map((tagName) => (
+              <li>{tagName}</li>
+            ))}
+          </ul>
+        )}
+
+        <div class="detail-cta">
+          <a class="btn btn-primary" href={fileUrl} download>
+            {copy.download}
+          </a>
+        </div>
+
+        <div class="detail-content">
+          <Content />
+        </div>
+      </div>
+    </div>
+  </article>
+</Layout>
+
+<style>
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .detail-media {
+    aspect-ratio: 1;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(135deg, var(--color-yellow), var(--color-orange) 55%, var(--color-brick));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-white);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.4rem;
+    text-align: center;
+    padding: 2rem;
+    position: sticky;
+    top: 100px;
+  }
+
+  .back-link {
+    display: inline-block;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  .detail-body > :global(.badge) {
+    margin-bottom: 0.75rem;
+  }
+
+  .detail-lede {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+  }
+
+  .detail-meta {
+    display: flex;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    margin: 1.25rem 0;
+    color: var(--text-muted);
+  }
+
+  .detail-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+
+  .detail-tags li {
+    font-size: 0.8rem;
+    font-weight: 600;
+    background: var(--bg-alt);
+    border-radius: var(--radius-pill);
+    padding: 0.3rem 0.75rem;
+  }
+
+  .detail-cta {
+    margin-bottom: 2rem;
+  }
+
+  .detail-content {
+    border-top: 1px solid var(--border);
+    padding-top: 1.75rem;
+  }
+
+  @media (max-width: 800px) {
+    .detail-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .detail-media {
+      position: static;
+    }
+  }
+</style>

@@ -1,0 +1,37 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../layouts/Layout.astro";
+import PostCard from "./PostCard.astro";
+import { pathTo, type Locale } from "../i18n/routes";
+import { t } from "../i18n/ui";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = t(locale).blog;
+const otherLocale: Locale = locale === "pt" ? "en" : "pt";
+
+const posts = (await getCollection("posts", ({ id }) => id.startsWith(`${locale}/`))).sort(
+  (a, b) => b.data.publishedDate.valueOf() - a.data.publishedDate.valueOf()
+);
+const slugOf = (id: string) => id.split("/").slice(1).join("/");
+---
+
+<Layout locale={locale} altPath={pathTo(otherLocale, "blog")} title={copy.title} description={copy.subtitle}>
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">{copy.eyebrow}</span>
+        <h1>{copy.title}</h1>
+        <p>{copy.subtitle}</p>
+      </div>
+      <div class="grid grid-3">
+        {posts.map((post) => (
+          <PostCard locale={locale} post={post} slug={slugOf(post.id)} />
+        ))}
+      </div>
+    </div>
+  </section>
+</Layout>

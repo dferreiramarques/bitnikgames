@@ -1,0 +1,18 @@
+---
+interface Props {
+  variant: "free" | "paid" | "pwyw" | "soon" | "external";
+  label: string;
+}
+
+const { variant, label } = Astro.props;
+
+const classByVariant: Record<Props["variant"], string> = {
+  free: "badge-free",
+  paid: "badge-paid",
+  pwyw: "badge-pwyw",
+  soon: "badge-soon",
+  external: "badge-external",
+};
+---
+
+<span class={`badge ${classByVariant[variant]}`}>{label}</span>

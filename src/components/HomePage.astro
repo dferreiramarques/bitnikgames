@@ -1,0 +1,210 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../layouts/Layout.astro";
+import GameCard from "./GameCard.astro";
+import PnpCard from "./PnpCard.astro";
+import PostCard from "./PostCard.astro";
+import { pathTo, type Locale } from "../i18n/routes";
+import { t } from "../i18n/ui";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = t(locale).home;
+const otherLocale: Locale = locale === "pt" ? "en" : "pt";
+
+const allGames = await getCollection("games", ({ id }) => id.startsWith(`${locale}/`));
+const featuredGames = allGames
+  .filter((g) => g.data.featured)
+  .sort((a, b) => b.data.publishedDate.valueOf() - a.data.publishedDate.valueOf())
+  .slice(0, 3);
+
+const allPnp = await getCollection("pnp", ({ id }) => id.startsWith(`${locale}/`));
+const featuredPnp = allPnp
+  .sort((a, b) => b.data.publishedDate.valueOf() - a.data.publishedDate.valueOf())
+  .slice(0, 3);
+
+const allPosts = await getCollection("posts", ({ id }) => id.startsWith(`${locale}/`));
+const latestPosts = allPosts
+  .sort((a, b) => b.data.publishedDate.valueOf() - a.data.publishedDate.valueOf())
+  .slice(0, 3);
+
+const slugOf = (id: string) => id.split("/").slice(1).join("/");
+---
+
+<Layout locale={locale} altPath={pathTo(otherLocale, "home")} title={copy.title} description={copy.subtitle}>
+  <section class="hero">
+    <div class="container hero-inner">
+      <span class="eyebrow">{copy.eyebrow}</span>
+      <h1>{copy.title}</h1>
+      <p class="hero-subtitle">{copy.subtitle}</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href={pathTo(locale, "catalog")}>{copy.ctaCatalog}</a>
+        <a class="btn btn-outline" href={pathTo(locale, "printAndPlay")}>{copy.ctaPnp}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">{copy.gamesEyebrow}</span>
+        <h2>{copy.gamesTitle}</h2>
+        <p>{copy.gamesSubtitle}</p>
+      </div>
+      <div class="grid grid-3">
+        {featuredGames.map((game) => (
+          <GameCard locale={locale} game={game} slug={slugOf(game.id)} />
+        ))}
+      </div>
+      <div class="section-cta">
+        <a class="btn btn-outline" href={pathTo(locale, "catalog")}>{copy.gamesCta}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">{copy.pnpEyebrow}</span>
+        <h2>{copy.pnpTitle}</h2>
+        <p>{copy.pnpSubtitle}</p>
+      </div>
+      <div class="grid grid-3">
+        {featuredPnp.map((item) => (
+          <PnpCard locale={locale} item={item} slug={slugOf(item.id)} />
+        ))}
+      </div>
+      <div class="section-cta">
+        <a class="btn btn-outline" href={pathTo(locale, "printAndPlay")}>{copy.pnpCta}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">{copy.blogEyebrow}</span>
+        <h2>{copy.blogTitle}</h2>
+        <p>{copy.blogSubtitle}</p>
+      </div>
+      <div class="grid grid-3">
+        {latestPosts.map((post) => (
+          <PostCard locale={locale} post={post} slug={slugOf(post.id)} />
+        ))}
+      </div>
+      <div class="section-cta">
+        <a class="btn btn-outline" href={pathTo(locale, "blog")}>{copy.blogCta}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="newsletter">
+    <div class="container newsletter-inner">
+      <div>
+        <h2>{copy.newsletterTitle}</h2>
+        <p>{copy.newsletterSubtitle}</p>
+      </div>
+      <form class="newsletter-form" id="newsletter-form">
+        <label class="visually-hidden" for="newsletter-email">Email</label>
+        <input id="newsletter-email" type="email" required placeholder={copy.newsletterPlaceholder} />
+        <button class="btn btn-secondary" type="submit">{copy.newsletterCta}</button>
+      </form>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .hero {
+    padding-block: clamp(3.5rem, 8vw, 6rem) clamp(2.5rem, 6vw, 4rem);
+    background: radial-gradient(circle at top right, var(--color-cream-soft), var(--bg) 60%);
+  }
+
+  .hero-inner {
+    max-width: 760px;
+  }
+
+  .eyebrow {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--brand-primary);
+    margin-bottom: 0.75rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.15rem;
+    color: var(--text-muted);
+    max-width: 60ch;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 1.75rem;
+  }
+
+  .section-alt {
+    background: var(--bg-alt);
+  }
+
+  .section-cta {
+    margin-top: 2rem;
+  }
+
+  .newsletter {
+    background: linear-gradient(120deg, var(--color-brick) 0%, var(--color-orange) 55%, var(--color-yellow) 100%);
+    color: var(--color-white);
+    padding-block: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  .newsletter h2 {
+    color: var(--color-white);
+  }
+
+  .newsletter p {
+    color: color-mix(in srgb, var(--color-white) 85%, transparent);
+  }
+
+  .newsletter-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .newsletter-inner > div {
+    max-width: 480px;
+  }
+
+  .newsletter-form {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  .newsletter-form input {
+    font-family: var(--font-body);
+    padding: 0.7rem 1rem;
+    border-radius: var(--radius-pill);
+    border: none;
+    min-width: 240px;
+  }
+</style>
+
+<script>
+  // Placeholder de newsletter: por agora só evita o reload da página.
+  // Substituir por uma chamada real (ex. Mailchimp, Buttondown, ConvertKit)
+  // quando houver um serviço de email escolhido.
+  const form = document.getElementById("newsletter-form");
+  form?.addEventListener("submit", (event) => {
+    event.preventDefault();
+  });
+</script>

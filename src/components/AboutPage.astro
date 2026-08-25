@@ -1,0 +1,46 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { pathTo, type Locale } from "../i18n/routes";
+import { t } from "../i18n/ui";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = t(locale).about;
+const otherLocale: Locale = locale === "pt" ? "en" : "pt";
+---
+
+<Layout locale={locale} altPath={pathTo(otherLocale, "about")} title={copy.title} description={copy.body1}>
+  <section class="section">
+    <div class="container about-container">
+      <span class="eyebrow">{copy.eyebrow}</span>
+      <h1>{copy.title}</h1>
+      <p class="about-lede">{copy.body1}</p>
+      <p>{copy.body2}</p>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .about-container {
+    max-width: 680px;
+  }
+
+  .eyebrow {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--brand-primary);
+    margin-bottom: 0.75rem;
+  }
+
+  .about-lede {
+    font-size: 1.15rem;
+    color: var(--text-muted);
+  }
+</style>
