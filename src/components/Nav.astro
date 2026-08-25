@@ -22,9 +22,8 @@ const navItems = [
 
 <header class="site-header">
   <div class="container bar">
-    <a href={pathTo(locale, "home")} class="logo" aria-label="bitnikgames — homepage">
-      <span class="logo-mark" aria-hidden="true"></span>
-      bitnikgames
+    <a href={pathTo(locale, "home")} class="logo">
+      <img src="/logo.png" alt="bitnikgames" width="65" height="36" />
     </a>
 
     <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="primary-nav">
@@ -70,19 +69,11 @@ const navItems = [
   .logo {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 1.25rem;
-    color: var(--text);
   }
 
-  .logo-mark {
-    width: 26px;
-    height: 26px;
-    border-radius: 8px;
-    background: linear-gradient(135deg, var(--color-yellow), var(--color-orange) 55%, var(--color-brick));
-    box-shadow: var(--shadow-card);
+  .logo img {
+    height: 36px;
+    width: auto;
   }
 
   .primary-nav {

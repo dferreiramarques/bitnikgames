@@ -15,7 +15,9 @@ const year = new Date().getFullYear();
 <footer class="site-footer">
   <div class="container footer-grid">
     <div class="footer-brand">
-      <a href={pathTo(locale, "home")} class="logo">bitnikgames</a>
+      <a href={pathTo(locale, "home")} class="logo">
+        <img src="/logo.png" alt="bitnikgames" width="90" height="50" />
+      </a>
       <p>{copy.tagline}</p>
     </div>
 
@@ -59,10 +61,12 @@ const year = new Date().getFullYear();
   }
 
   .footer-brand .logo {
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 1.3rem;
-    color: var(--color-cream);
+    display: inline-block;
+  }
+
+  .footer-brand .logo img {
+    height: 44px;
+    width: auto;
   }
 
   .footer-brand p {
