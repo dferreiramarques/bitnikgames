@@ -3,6 +3,7 @@ import type { CollectionEntry } from "astro:content";
 import Badge from "./Badge.astro";
 import { pathTo, type Locale } from "../i18n/routes";
 import { pnpBadge } from "../lib/badges";
+import { hasCoverImage } from "../lib/coverImage";
 
 interface Props {
   locale: Locale;
@@ -15,10 +16,13 @@ const { title, shortDescription, access, price } = item.data;
 
 const badge = pnpBadge(locale, access, price);
 const href = pathTo(locale, "printAndPlay", slug);
+const coverSrc = hasCoverImage(slug) ? `/cards/${slug}.png` : null;
 ---
 
 <a class="card" href={href}>
-  <div class="card-media" aria-hidden="true">{title}</div>
+  <div class="card-media" aria-hidden="true">
+    {coverSrc ? <img src={coverSrc} alt="" /> : title}
+  </div>
   <div class="card-body">
     <h3 class="card-title">{title}</h3>
     <p class="card-excerpt">{shortDescription}</p>

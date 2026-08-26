@@ -3,7 +3,7 @@ import { glob } from "astro/loaders";
 
 // Cada coleção tem uma subpasta por idioma (pt/en) com o MESMO slug de
 // ficheiro para a mesma obra — é assim que conseguimos, por exemplo, ligar
-// /pt/catalogo/rio-de-flores a /en/catalog/rio-de-flores sem adivinhar nada.
+// /pt/catalogo/bulbous a /en/catalog/bulbous sem adivinhar nada.
 
 const games = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/games" }),

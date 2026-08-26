@@ -6,6 +6,7 @@ import Badge from "./Badge.astro";
 import { pathTo, type Locale } from "../i18n/routes";
 import { t } from "../i18n/ui";
 import { pnpBadge } from "../lib/badges";
+import { hasCoverImage } from "../lib/coverImage";
 
 interface Props {
   locale: Locale;
@@ -22,6 +23,7 @@ const { Content } = await render(entry);
 
 const badge = pnpBadge(locale, access, price);
 const fileReady = fileUrl !== "#";
+const coverSrc = hasCoverImage(slug) ? `/cards/${slug}.png` : null;
 ---
 
 <Layout
@@ -32,7 +34,9 @@ const fileReady = fileUrl !== "#";
 >
   <article class="section detail">
     <div class="container detail-grid">
-      <div class="detail-media" aria-hidden="true">{title}</div>
+      <div class="detail-media" aria-hidden="true">
+        {coverSrc ? <img src={coverSrc} alt="" /> : title}
+      </div>
 
       <div class="detail-body">
         <a class="back-link" href={pathTo(locale, "printAndPlay")}>&larr; {nav.printAndPlay}</a>
