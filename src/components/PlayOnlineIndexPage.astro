@@ -20,8 +20,6 @@ const games = [
   {
     title: "Bulbous",
     url: "https://bulbous.up.railway.app/",
-    accentFrom: "#c084fc",
-    accentTo: "#2e2e50",
     description: {
       pt: "Sorte, bluff e estratégia — multijogador em tempo real, até 4 jogadores ou contra bots.",
       en: "Luck, bluff, and strategy — realtime multiplayer for up to 4 players, or against bots.",
@@ -30,8 +28,6 @@ const games = [
   {
     title: "Capivaras",
     url: "https://capivaras.up.railway.app/",
-    accentFrom: "#c47c28",
-    accentTo: "#3a9e96",
     description: {
       pt: "Aposta em silêncio para conquistar as capivaras do Pantanal — quem escolher a mesma que outro jogador fica a ver navios.",
       en: "Bet in silence to win over the Pantanal's capybaras — pick the same one as another player and they both scare it off.",
@@ -40,8 +36,6 @@ const games = [
   {
     title: "Catania",
     url: "https://catania.up.railway.app/",
-    accentFrom: "#c9a84c",
-    accentTo: "#2a1f08",
     description: {
       pt: "Gestão de recursos na Sicília do Século VIII a.C. — recolhe cereais, vinho e azeite, e funda cidades antes dos outros.",
       en: "Resource management in 8th-century BC Sicily — gather grain, wine, and olive oil, and found cities before the others do.",
@@ -50,8 +44,6 @@ const games = [
   {
     title: "Nine Oils",
     url: "https://nineoils.up.railway.app/",
-    accentFrom: "#c49030",
-    accentTo: "#1e1108",
     description: {
       pt: "Um jogo de sorte e vontade — atira 9 dados, junta combos e enche a tua banca de óleo de cobra antes do adversário.",
       en: "A game of luck and will — roll 9 dice, chain combos, and stock your snake-oil stall before your opponent does.",
@@ -72,22 +64,15 @@ const games = [
       {games.length > 0 ? (
         <div class="grid grid-3">
           {games.map((game) => (
-            <a class="card" href={game.url} target="_blank" rel="noreferrer">
-              <div
-                class="card-media"
-                aria-hidden="true"
-                style={`background: linear-gradient(135deg, ${game.accentFrom} 0%, ${game.accentTo} 100%);`}
-              >
-                {game.title}
-              </div>
+            <div class="card play-card">
               <div class="card-body">
                 <h3 class="card-title">{game.title}</h3>
                 <p class="card-excerpt">{game.description[locale]}</p>
-                <div class="card-footer">
-                  <span class="play-cta">{copy.openGame} &rarr;</span>
-                </div>
               </div>
-            </a>
+              <a class="btn btn-primary btn-block" href={game.url} target="_blank" rel="noreferrer">
+                {copy.openGame} &rarr;
+              </a>
+            </div>
           ))}
         </div>
       ) : (
@@ -106,11 +91,13 @@ const games = [
 </Layout>
 
 <style>
-  .play-cta {
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: 0.9rem;
-    color: var(--brand-primary);
+  .play-card {
+    padding: 1.1rem 1.25rem 1.25rem;
+    gap: 0.6rem;
+  }
+
+  .play-card .card-body {
+    padding: 0;
   }
 
   .external-note {
