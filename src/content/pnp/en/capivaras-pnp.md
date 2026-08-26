@@ -1,4 +1,5 @@
 ---
+featured: true
 title: "Capivaras PnP"
 shortDescription: "Description coming soon."
 access: "paid"
