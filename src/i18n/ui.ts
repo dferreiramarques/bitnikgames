@@ -77,7 +77,7 @@ export const ui = {
     },
     tools: {
       eyebrow: "Ferramentas de Design",
-      title: "Ferramentas de prototipagem",
+      title: "Design, Prototipagem e Produção",
       subtitle:
         "Utilitários que usamos internamente para prototipar jogos — geradores, calculadoras, o que for preciso. Partilhados aqui porque também te podem ser úteis.",
       openTool: "Abrir ferramenta",
@@ -182,7 +182,7 @@ export const ui = {
     },
     tools: {
       eyebrow: "Designer's Tools",
-      title: "Prototyping tools",
+      title: "Design, Prototyping & Production",
       subtitle:
         "Utilities we use internally to prototype games — generators, calculators, whatever's needed. Shared here because they might be useful to you too.",
       openTool: "Open tool",
