@@ -6,6 +6,7 @@ import Badge from "./Badge.astro";
 import { pathTo, type Locale } from "../i18n/routes";
 import { t } from "../i18n/ui";
 import { gameBadge } from "../lib/badges";
+import { hasCoverImage } from "../lib/coverImage";
 
 interface Props {
   locale: Locale;
@@ -23,6 +24,7 @@ const { title, shortDescription, players, duration, age, status, price, external
 const { Content } = await render(entry);
 
 const badge = gameBadge(locale, status);
+const coverSrc = hasCoverImage(slug) ? `/cards/${slug}.png` : null;
 ---
 
 <Layout
@@ -33,7 +35,9 @@ const badge = gameBadge(locale, status);
 >
   <article class="section detail">
     <div class="container detail-grid">
-      <div class="detail-media" aria-hidden="true">{title}</div>
+      <div class="detail-media" aria-hidden="true">
+        {coverSrc ? <img src={coverSrc} alt="" /> : title}
+      </div>
 
       <div class="detail-body">
         <a class="back-link" href={pathTo(locale, "catalog")}>&larr; {nav.catalog}</a>
