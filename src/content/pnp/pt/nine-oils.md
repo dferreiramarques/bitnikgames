@@ -1,4 +1,5 @@
 ---
+featured: true
 title: "Nine Oils"
 shortDescription: "Descrição a preencher."
 access: "free"
