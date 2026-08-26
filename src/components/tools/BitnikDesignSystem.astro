@@ -18,6 +18,7 @@ const description =
     : "The tokens and components that keep the site and bitnikgames' online games visually consistent — plain CSS, open source, ready to reuse in another project.";
 
 const REPO_URL = "https://github.com/dferreiramarques/bitnikgames-design-system";
+const SKIN_BUILDER_URL = "https://dferreiramarques.github.io/bitnikgames-design-system/skin-builder/";
 
 const STRINGS = {
   pt: {
@@ -32,6 +33,11 @@ const STRINGS = {
       cdnLabel: "Sem npm (HTML simples, via jsDelivr)",
       fontsLabel: "Carregar as fontes",
       fontsNote: "O CSS só define a stack (--font-display, --font-body) — as fontes em si carregam-se à parte.",
+    },
+    skinBuilder: {
+      heading: "Criar uma skin",
+      body: "A única camada que precisas de tocar para adaptar isto a outra marca é tokens.css — escolhe a paleta e as Google Fonts visualmente nesta página, com pré-visualização ao vivo usando o base.css e o components.css reais do pacote, e exporta um tokens.css novo.",
+      cta: "Abrir o Skin Builder",
     },
     tokens: {
       heading: "Tokens",
@@ -91,6 +97,11 @@ const STRINGS = {
       cdnLabel: "No npm (plain HTML, via jsDelivr)",
       fontsLabel: "Load the fonts",
       fontsNote: "The CSS only defines the stack (--font-display, --font-body) — the fonts themselves load separately.",
+    },
+    skinBuilder: {
+      heading: "Build a skin",
+      body: "The only layer you need to touch to adapt this to another brand is tokens.css — pick a palette and Google Fonts visually on this page, with a live preview using the package's real base.css and components.css, and export a new tokens.css.",
+      cta: "Open the Skin Builder",
     },
     tokens: {
       heading: "Tokens",
@@ -252,6 +263,13 @@ const DOTS: Record<number, number[]> = {
         <p class="ds-label">{L.install.fontsLabel}</p>
         <pre class="ds-code"><code>{`<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />`}</code></pre>
         <p class="ds-note">{L.install.fontsNote}</p>
+      </div>
+
+      <!-- ============================== skin builder ============================== -->
+      <div class="ds-block ds-skin-builder">
+        <h2>{L.skinBuilder.heading}</h2>
+        <p class="ds-note">{L.skinBuilder.body}</p>
+        <a class="btn btn-secondary" href={SKIN_BUILDER_URL} target="_blank" rel="noreferrer">{L.skinBuilder.cta} &rarr;</a>
       </div>
 
       <!-- ============================== tokens ============================== -->
@@ -484,6 +502,18 @@ const DOTS: Record<number, number[]> = {
     font-family: var(--font-display);
     color: var(--brand-primary);
     margin: 1.5rem 0 0.75rem;
+  }
+
+  .ds-skin-builder {
+    background: var(--bg-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.75rem;
+  }
+
+  .ds-skin-builder .ds-note {
+    max-width: 60ch;
+    margin-bottom: 1.1rem;
   }
 
   .ds-label {
