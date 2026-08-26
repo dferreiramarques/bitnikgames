@@ -1,4 +1,5 @@
 ---
+order: 1
 featured: true
 title: "Zombiquerque"
 shortDescription: "Description coming soon."
