@@ -1,5 +1,5 @@
 ---
-order: 2
+order: 3
 title: "Sleepy Cat"
 shortDescription: "Descrição a preencher."
 access: "free"
