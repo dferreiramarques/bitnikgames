@@ -1,5 +1,5 @@
 ---
-order: 1
+order: 2
 title: "Bael's Grotto"
 shortDescription: "Description coming soon."
 players: { min: 2, max: 4 }
