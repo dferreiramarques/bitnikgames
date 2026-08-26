@@ -1,4 +1,5 @@
 ---
+order: 4
 title: "Praia das Percebes"
 shortDescription: "Description coming soon."
 access: "paid"

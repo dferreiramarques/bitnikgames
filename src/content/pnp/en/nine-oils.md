@@ -1,4 +1,5 @@
 ---
+order: 2
 featured: true
 title: "Nine Oils"
 shortDescription: "Description coming soon."
