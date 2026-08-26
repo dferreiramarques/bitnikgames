@@ -10,6 +10,24 @@ interface Props {
 const { locale } = Astro.props;
 const copy = t(locale).playOnline;
 const otherLocale: Locale = locale === "pt" ? "en" : "pt";
+
+// Registo simples dos jogos disponíveis para jogar online. Cada um corre
+// no seu próprio servidor (jogos em tempo real precisam de mais do que
+// ficheiros estáticos) — por isso o link é sempre externo, nunca uma
+// rota interna do site. Quando houver mais do que um jogo, isto passa a
+// listar vários cartões sem precisar de mudar mais nada aqui.
+const games = [
+  {
+    title: "Bulbous",
+    url: "https://bulbous.up.railway.app/",
+    accentFrom: "#c084fc",
+    accentTo: "#2e2e50",
+    description: {
+      pt: "Sorte, bluff e estratégia — multijogador em tempo real, até 4 jogadores ou contra bots.",
+      en: "Luck, bluff, and strategy — realtime multiplayer for up to 4 players, or against bots.",
+    },
+  },
+];
 ---
 
 <Layout locale={locale} altPath={pathTo(otherLocale, "playOnline")} title={copy.title} description={copy.subtitle}>
@@ -21,18 +39,56 @@ const otherLocale: Locale = locale === "pt" ? "en" : "pt";
         <p>{copy.subtitle}</p>
       </div>
 
-      <div class="empty-state">
-        <span class="badge badge-soon">{"⏳"}</span>
-        <div>
-          <h2>{copy.comingSoonTitle}</h2>
-          <p>{copy.comingSoonBody}</p>
+      {games.length > 0 ? (
+        <div class="grid grid-3">
+          {games.map((game) => (
+            <a class="card" href={game.url} target="_blank" rel="noreferrer">
+              <div
+                class="card-media"
+                aria-hidden="true"
+                style={`background: linear-gradient(135deg, ${game.accentFrom} 0%, ${game.accentTo} 100%);`}
+              >
+                {game.title}
+              </div>
+              <div class="card-body">
+                <h3 class="card-title">{game.title}</h3>
+                <p class="card-excerpt">{game.description[locale]}</p>
+                <div class="card-footer">
+                  <span class="play-cta">{copy.openGame} &rarr;</span>
+                </div>
+              </div>
+            </a>
+          ))}
         </div>
-      </div>
+      ) : (
+        <div class="empty-state">
+          <span class="badge badge-soon">{"⏳"}</span>
+          <div>
+            <h2>{copy.comingSoonTitle}</h2>
+            <p>{copy.comingSoonBody}</p>
+          </div>
+        </div>
+      )}
+
+      <p class="external-note">{copy.externalNote}</p>
     </div>
   </section>
 </Layout>
 
 <style>
+  .play-cta {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--brand-primary);
+  }
+
+  .external-note {
+    margin-top: 1.5rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
   .empty-state {
     display: flex;
     align-items: flex-start;

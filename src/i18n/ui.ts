@@ -69,9 +69,11 @@ export const ui = {
       eyebrow: "Jogar Online",
       title: "Jogar online",
       subtitle:
-        "Réplicas digitais dos jogos da bitnikgames, para jogar direto no browser — sem descarregar nada. Ainda não há nenhuma publicada; ficam aqui assim que estiverem prontas.",
+        "Réplicas digitais dos jogos da bitnikgames, para jogar direto no browser — sem descarregar nada.",
       comingSoonTitle: "Ainda não há jogos online publicados",
       comingSoonBody: "Estamos a preparar as primeiras réplicas. Volta em breve.",
+      openGame: "Jogar agora",
+      externalNote: "Abre num separador novo — corre num servidor à parte, dedicado ao jogo em tempo real.",
     },
     tools: {
       eyebrow: "Ferramentas de Design",
@@ -172,9 +174,11 @@ export const ui = {
       eyebrow: "Play Online",
       title: "Play online",
       subtitle:
-        "Digital replicas of bitnikgames titles, playable straight in your browser — nothing to download. None published yet; they'll show up here as they're ready.",
+        "Digital replicas of bitnikgames titles, playable straight in your browser — nothing to download.",
       comingSoonTitle: "No online games published yet",
       comingSoonBody: "We're working on the first replicas. Check back soon.",
+      openGame: "Play now",
+      externalNote: "Opens in a new tab — runs on a separate server dedicated to realtime play.",
     },
     tools: {
       eyebrow: "Designer's Tools",
