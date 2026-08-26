@@ -1,0 +1,898 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { pathTo, type Locale } from "../../i18n/routes";
+import { t } from "../../i18n/ui";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = t(locale).tools;
+const otherLocale: Locale = locale === "pt" ? "en" : "pt";
+
+const title = "Bitnik Design System";
+const description =
+  locale === "pt"
+    ? "Os tokens e componentes que garantem consistência visual entre o site e os jogos online da bitnikgames — CSS puro, open source, pronto a reutilizar noutro projeto."
+    : "The tokens and components that keep the site and bitnikgames' online games visually consistent — plain CSS, open source, ready to reuse in another project.";
+
+const REPO_URL = "https://github.com/dferreiramarques/bitnikgames-design-system";
+
+const STRINGS = {
+  pt: {
+    subtitle: "Design system · CSS puro, open source",
+    ghCta: "Ver no GitHub",
+    license: "Licença MIT",
+    intro:
+      "Extraído do código deste site em 2026 para manter a mesma identidade visual entre a bitnikgames.vercel.app e os jogos online do catálogo — sem copiar e colar CSS entre projetos. Zero dependências, zero build step obrigatório: funciona em Astro, React, Vue, ou HTML simples.",
+    install: {
+      heading: "Instalar",
+      npmLabel: "Via npm (num projeto com bundler)",
+      cdnLabel: "Sem npm (HTML simples, via jsDelivr)",
+      fontsLabel: "Carregar as fontes",
+      fontsNote: "O CSS só define a stack (--font-display, --font-body) — as fontes em si carregam-se à parte.",
+    },
+    tokens: {
+      heading: "Tokens",
+      subhead: "A única camada que uma \"skin\" deve tocar — muda estas variáveis e todo o resto segue.",
+      colorsHeading: "Cor",
+      radiusHeading: "Forma (border-radius)",
+      shadowHeading: "Sombra",
+      shadowNote: "Deriva de --shadow-color-rgb — muda a tinta (--color-ink) da skin e a sombra segue, em vez de ficar preta fixa.",
+      typeHeading: "Tipografia",
+      typeDisplay: "--font-display · Baloo 2",
+      typeDisplaySample: "Jogos publicados",
+      typeBody: "--font-body · Inter",
+      typeBodySample: "Texto de corpo, legível em qualquer tamanho — usado em parágrafos, listas e formulários.",
+    },
+    components: {
+      heading: "Componentes base",
+      subhead: "Layout, botões, badges e cartões — o que qualquer site de marketing ou catálogo precisa.",
+      buttonsHeading: "Botões",
+      badgesHeading: "Badges",
+      badgesNote:
+        "Aqui usam os nomes específicos deste site (badge-free, badge-paid...). No pacote standalone são generalizados para badge-accent / badge-primary / badge-secondary / badge-outline / badge-ink, para fazer sentido fora do contexto de jogos.",
+      cardsHeading: "Cartões",
+    },
+    gameUi: {
+      heading: "Camada opcional: UI de jogo",
+      subhead:
+        "Não faz parte do import por omissão — só importa game-ui.css em projetos com tabuleiro/cartas. Extraído dos jogos reais no catálogo \"Jogar Online\".",
+      chipsHeading: "Chips de cor",
+      chipsNote: "Para referenciar jogador/equipa/naipe de forma legível — 4 tokens de cor (--game-color-1..4) que cada jogo sobrescreve com a sua paleta.",
+      cardsHeading: "Cartas de jogo",
+      cardsNote: "Arte real do Bulbous — hover para veres o lift + sombra. .badge-circle sobrepõe a numeração, .game-card-bar dá a barra de legenda inferior.",
+      diceHeading: "Dados",
+      diceNote: "O mesmo padrão de pips (grelha 3×3 + --shadow-color-rgb) usado nos 9 dados do Nine Oils, aqui parado numa jogada de exemplo.",
+      tabsHeading: "Tabs",
+      modalHeading: "Modal",
+      modalNote: "(mostrado fora do overlay position:fixed, só para ver o estilo da caixa)",
+      modalTitle: "Confirmar jogada?",
+      modalBody: "Este é o .modal-box — usado nos popups de detalhe de carta e confirmações dentro dos jogos.",
+      toastHeading: "Toast",
+    },
+    games: {
+      heading: "Jogos que já o usam",
+      subhead: "Cada um com a sua própria paleta — tipografia, raio e sombra partilhados.",
+      play: "Jogar",
+    },
+    footerCta: "Ver a documentação completa no README →",
+  },
+  en: {
+    subtitle: "Design system · plain CSS, open source",
+    ghCta: "View on GitHub",
+    license: "MIT license",
+    intro:
+      "Extracted from this site's code in 2026 to keep the same visual identity between bitnikgames.vercel.app and the catalog's online games — without copy-pasting CSS between projects. Zero dependencies, no required build step: works in Astro, React, Vue, or plain HTML.",
+    install: {
+      heading: "Install",
+      npmLabel: "Via npm (in a bundled project)",
+      cdnLabel: "No npm (plain HTML, via jsDelivr)",
+      fontsLabel: "Load the fonts",
+      fontsNote: "The CSS only defines the stack (--font-display, --font-body) — the fonts themselves load separately.",
+    },
+    tokens: {
+      heading: "Tokens",
+      subhead: "The only layer a \"skin\" should touch — change these variables and everything else follows.",
+      colorsHeading: "Color",
+      radiusHeading: "Shape (border-radius)",
+      shadowHeading: "Shadow",
+      shadowNote: "Derives from --shadow-color-rgb — change the skin's ink color and the shadow follows, instead of staying flat black.",
+      typeHeading: "Typography",
+      typeDisplay: "--font-display · Baloo 2",
+      typeDisplaySample: "Published games",
+      typeBody: "--font-body · Inter",
+      typeBodySample: "Body copy, legible at any size — used in paragraphs, lists, and forms.",
+    },
+    components: {
+      heading: "Base components",
+      subhead: "Layout, buttons, badges, and cards — what any marketing or catalog site needs.",
+      buttonsHeading: "Buttons",
+      badgesHeading: "Badges",
+      badgesNote:
+        "Shown here with this site's specific names (badge-free, badge-paid...). In the standalone package they're generalized to badge-accent / badge-primary / badge-secondary / badge-outline / badge-ink, to make sense outside a games context.",
+      cardsHeading: "Cards",
+    },
+    gameUi: {
+      heading: "Optional layer: game UI",
+      subhead:
+        "Not part of the default import — only import game-ui.css in projects with a board/cards. Extracted from the real games in the \"Play Online\" catalog.",
+      chipsHeading: "Color chips",
+      chipsNote: "For referencing player/team/suit legibly — 4 color tokens (--game-color-1..4) that each game overrides with its own palette.",
+      cardsHeading: "Game cards",
+      cardsNote: "Real Bulbous artwork — hover to see the lift + shadow. .badge-circle overlays the numbering, .game-card-bar gives the bottom caption bar.",
+      diceHeading: "Dice",
+      diceNote: "The same pip pattern (3×3 grid + --shadow-color-rgb) used for Nine Oils' 9 dice, frozen here on a sample roll.",
+      tabsHeading: "Tabs",
+      modalHeading: "Modal",
+      modalNote: "(shown outside the position:fixed overlay, just to see the box style)",
+      modalTitle: "Confirm move?",
+      modalBody: "This is .modal-box — used for card-detail popups and confirmations inside the games.",
+      toastHeading: "Toast",
+    },
+    games: {
+      heading: "Games already using it",
+      subhead: "Each with its own palette — typography, radius, and shadow shared.",
+      play: "Play",
+    },
+    footerCta: "See the full documentation in the README →",
+  },
+} as const;
+
+const L = STRINGS[locale];
+
+const colorTokens = [
+  { name: "--color-yellow", hex: "#e8a93b" },
+  { name: "--color-yellow-deep", hex: "#c4841f" },
+  { name: "--color-orange", hex: "#ea7c2e" },
+  { name: "--color-orange-deep", hex: "#c85f1d" },
+  { name: "--color-brick", hex: "#b8461f" },
+  { name: "--color-brick-deep", hex: "#8f3417" },
+  { name: "--color-cream", hex: "#fbf3e4" },
+  { name: "--color-cream-soft", hex: "#f3e4cb" },
+  { name: "--color-cream-strong", hex: "#ecd6ac" },
+  { name: "--color-ink", hex: "#2b1b12" },
+  { name: "--color-ink-soft", hex: "#5b4636" },
+  { name: "--color-white", hex: "#fffaf1" },
+];
+
+const radiusTokens = [
+  { name: "--radius-sm", value: "8px" },
+  { name: "--radius-md", value: "14px" },
+  { name: "--radius-lg", value: "24px" },
+  { name: "--radius-pill", value: "999px" },
+];
+
+const games = [
+  {
+    name: "Bulbous",
+    url: "https://bulbous.up.railway.app/",
+    repo: "https://github.com/dferreiramarques/bulbous",
+    note:
+      locale === "pt"
+        ? "Tema escuro, acento lilás. Primeiro a usar .game-card, .chip e .badge-circle."
+        : "Dark theme, lilac accent. First to use .game-card, .chip, and .badge-circle.",
+  },
+  {
+    name: "Capivaras",
+    url: "https://capivaras.up.railway.app/",
+    repo: "https://github.com/dferreiramarques/capivaras",
+    note:
+      locale === "pt"
+        ? "Tema claro e quente, âmbar + teal. Primeiro a usar --shadow-color-rgb corretamente."
+        : "Warm light theme, amber + teal. First to use --shadow-color-rgb correctly.",
+  },
+  {
+    name: "Catania",
+    url: "https://catania.up.railway.app/",
+    repo: "https://github.com/dferreiramarques/catania-v2",
+    note:
+      locale === "pt"
+        ? "Tema dourado sobre quase-preto. Texto SVG com var(--font-display) no mapa de hexágonos."
+        : "Gold-on-near-black theme. SVG text using var(--font-display) on the hex-grid map.",
+  },
+  {
+    name: "Nine Oils",
+    url: "https://nineoils.up.railway.app/",
+    repo: "https://github.com/dferreiramarques/nineoils-v2",
+    note:
+      locale === "pt"
+        ? "Tema óleo de cobra, dourado sobre madeira escura. Os 9 dados usam o padrão .die/.dot."
+        : "Snake-oil theme, gold on dark wood. The 9 dice use the .die/.dot pattern.",
+  },
+];
+
+// Padrão de pips extraído do Nine Oils (server.js, const DOTS) — posições
+// 0-8 numa grelha 3×3. Congelado numa jogada de exemplo só para ilustrar.
+const sampleRoll = [3, 5, 5, 2, 6, 5, 1, 4, 5];
+const DOTS: Record<number, number[]> = {
+  1: [4],
+  2: [2, 6],
+  3: [2, 4, 6],
+  4: [0, 2, 6, 8],
+  5: [0, 2, 4, 6, 8],
+  6: [0, 2, 3, 5, 6, 8],
+};
+---
+
+<Layout
+  locale={locale}
+  altPath={pathTo(otherLocale, "tools", "bitnik-design-system")}
+  title={title}
+  description={description}
+>
+  <section class="section ds-page">
+    <div class="container">
+      <a class="back-link" href={pathTo(locale, "tools")}>&larr; {copy.backToTools}</a>
+
+      <div class="section-head">
+        <span class="eyebrow">{copy.eyebrow}</span>
+        <h1>{title}</h1>
+        <p>{description}</p>
+        <div class="ds-hero-actions">
+          <a class="btn btn-primary" href={REPO_URL} target="_blank" rel="noreferrer">{L.ghCta} &rarr;</a>
+          <span class="badge badge-soon">{L.license}</span>
+        </div>
+      </div>
+
+      <p class="ds-intro">{L.intro}</p>
+
+      <!-- ============================== instalar ============================== -->
+      <div class="ds-block">
+        <h2>{L.install.heading}</h2>
+
+        <p class="ds-label">{L.install.npmLabel}</p>
+        <pre class="ds-code"><code>npm install git+https://github.com/dferreiramarques/bitnikgames-design-system.git</code></pre>
+        <pre class="ds-code"><code>{`@import "@bitnikgames/design-system/src/index.css";`}</code></pre>
+
+        <p class="ds-label">{L.install.cdnLabel}</p>
+        <pre class="ds-code"><code>{`<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/dferreiramarques/bitnikgames-design-system@main/src/index.css" />`}</code></pre>
+
+        <p class="ds-label">{L.install.fontsLabel}</p>
+        <pre class="ds-code"><code>{`<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />`}</code></pre>
+        <p class="ds-note">{L.install.fontsNote}</p>
+      </div>
+
+      <!-- ============================== tokens ============================== -->
+      <div class="ds-block">
+        <h2>{L.tokens.heading}</h2>
+        <p class="ds-note">{L.tokens.subhead}</p>
+
+        <h3>{L.tokens.colorsHeading}</h3>
+        <div class="ds-swatch-grid">
+          {colorTokens.map((c) => (
+            <div class="ds-swatch">
+              <div class="ds-swatch-color" style={`background:${c.hex}`}></div>
+              <code>{c.name}</code>
+              <span>{c.hex}</span>
+            </div>
+          ))}
+        </div>
+
+        <h3>{L.tokens.radiusHeading}</h3>
+        <div class="ds-radius-row">
+          {radiusTokens.map((r) => (
+            <div class="ds-radius-item">
+              <div class="ds-radius-box" style={`border-radius:${r.value}`}></div>
+              <code>{r.name}</code>
+              <span>{r.value}</span>
+            </div>
+          ))}
+        </div>
+
+        <h3>{L.tokens.shadowHeading}</h3>
+        <div class="ds-shadow-row">
+          <div class="ds-shadow-box ds-shadow-card">shadow-card</div>
+          <div class="ds-shadow-box ds-shadow-card-hover">shadow-card-hover</div>
+        </div>
+        <p class="ds-note">{L.tokens.shadowNote}</p>
+
+        <h3>{L.tokens.typeHeading}</h3>
+        <div class="ds-type-row">
+          <div>
+            <code>{L.tokens.typeDisplay}</code>
+            <p class="ds-type-display">{L.tokens.typeDisplaySample}</p>
+          </div>
+          <div>
+            <code>{L.tokens.typeBody}</code>
+            <p class="ds-type-body">{L.tokens.typeBodySample}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================== componentes base ============================== -->
+      <div class="ds-block">
+        <h2>{L.components.heading}</h2>
+        <p class="ds-note">{L.components.subhead}</p>
+
+        <h3>{L.components.buttonsHeading}</h3>
+        <div class="ds-row">
+          <button class="btn btn-primary">btn-primary</button>
+          <button class="btn btn-secondary">btn-secondary</button>
+          <button class="btn btn-outline">btn-outline</button>
+        </div>
+
+        <h3>{L.components.badgesHeading}</h3>
+        <div class="ds-row">
+          <span class="badge badge-free">badge-free</span>
+          <span class="badge badge-paid">badge-paid</span>
+          <span class="badge badge-pwyw">badge-pwyw</span>
+          <span class="badge badge-soon">badge-soon</span>
+          <span class="badge badge-external">badge-external</span>
+        </div>
+        <p class="ds-note">{L.components.badgesNote}</p>
+
+        <h3>{L.components.cardsHeading}</h3>
+        <div class="grid grid-3">
+          <div class="card">
+            <div class="card-media" aria-hidden="true">Bulbous</div>
+            <div class="card-body">
+              <div class="card-meta"><span>2–4</span><span>30 min</span></div>
+              <h3 class="card-title">Bulbous</h3>
+              <p class="card-excerpt">.card + .card-media + .card-body</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-media" aria-hidden="true">Capivaras</div>
+            <div class="card-body">
+              <div class="card-meta"><span>2–6</span><span>20 min</span></div>
+              <h3 class="card-title">Capivaras</h3>
+              <p class="card-excerpt">.card-title + .card-excerpt</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-media" aria-hidden="true">Catania</div>
+            <div class="card-body">
+              <div class="card-meta"><span>2–4</span><span>45 min</span></div>
+              <h3 class="card-title">Catania</h3>
+              <p class="card-excerpt">.card-meta + .card-footer</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================== game-ui.css ============================== -->
+      <div class="ds-block">
+        <h2>{L.gameUi.heading}</h2>
+        <p class="ds-note">{L.gameUi.subhead}</p>
+
+        <h3>{L.gameUi.chipsHeading}</h3>
+        <div class="ds-row ds-chip-demo">
+          <span class="ds-chip ds-chip-1">Jogador 1</span>
+          <span class="ds-chip ds-chip-2">Jogador 2</span>
+          <span class="ds-chip ds-chip-3">Jogador 3</span>
+          <span class="ds-chip ds-chip-4">Jogador 4</span>
+        </div>
+        <p class="ds-note">{L.gameUi.chipsNote}</p>
+
+        <h3>{L.gameUi.cardsHeading}</h3>
+        <div class="ds-game-card-row">
+          <div class="ds-game-card is-clickable">
+            <img src="/design-system/bulbous-card-red.jpg" alt="" />
+            <span class="ds-badge-circle">1</span>
+            <div class="ds-game-card-bar">Bulbous</div>
+          </div>
+          <div class="ds-game-card is-clickable">
+            <img src="/design-system/bulbous-card-blue.jpg" alt="" />
+            <span class="ds-badge-circle">2</span>
+            <div class="ds-game-card-bar">Bulbous</div>
+          </div>
+          <div class="ds-game-card is-clickable is-selected">
+            <img src="/design-system/bulbous-card-green.jpg" alt="" />
+            <span class="ds-badge-circle">3</span>
+            <div class="ds-game-card-bar">Bulbous</div>
+          </div>
+          <div class="ds-game-card is-clickable">
+            <img src="/design-system/bulbous-card-yellow.jpg" alt="" />
+            <span class="ds-badge-circle">4</span>
+            <div class="ds-game-card-bar">Bulbous</div>
+          </div>
+        </div>
+        <p class="ds-note">{L.gameUi.cardsNote}</p>
+
+        <h3>{L.gameUi.diceHeading}</h3>
+        <div class="ds-dice-row">
+          {sampleRoll.map((val) => (
+            <div class="ds-die">
+              {Array.from({ length: 9 }).map((_, i) => (
+                <span class={`ds-dot ${DOTS[val].includes(i) ? "" : "ds-dot-off"}`}></span>
+              ))}
+            </div>
+          ))}
+        </div>
+        <p class="ds-note">{L.gameUi.diceNote}</p>
+
+        <div class="ds-two-col">
+          <div>
+            <h3>{L.gameUi.tabsHeading}</h3>
+            <div class="ds-tabs">
+              <button class="ds-tab active" data-ds-tab="a">Regras</button>
+              <button class="ds-tab" data-ds-tab="b">Histórico</button>
+            </div>
+          </div>
+
+          <div>
+            <h3>{L.gameUi.toastHeading}</h3>
+            <span class="ds-toast">{L.gameUi.modalTitle}</span>
+          </div>
+        </div>
+
+        <h3>{L.gameUi.modalHeading}</h3>
+        <p class="ds-note">{L.gameUi.modalNote}</p>
+        <div class="ds-modal-box">
+          <strong>{L.gameUi.modalTitle}</strong>
+          <p>{L.gameUi.modalBody}</p>
+          <button class="btn btn-primary">OK</button>
+        </div>
+      </div>
+
+      <!-- ============================== jogos ============================== -->
+      <div class="ds-block">
+        <h2>{L.games.heading}</h2>
+        <p class="ds-note">{L.games.subhead}</p>
+        <div class="grid grid-4 ds-games-grid">
+          {games.map((g) => (
+            <div class="ds-game-item">
+              <h3>{g.name}</h3>
+              <p>{g.note}</p>
+              <div class="ds-game-links">
+                <a href={g.url} target="_blank" rel="noreferrer">{L.games.play} &rarr;</a>
+                <a href={g.repo} target="_blank" rel="noreferrer">GitHub &rarr;</a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <p class="ds-footer-cta">
+        <a href={`${REPO_URL}#readme`} target="_blank" rel="noreferrer">{L.footerCta}</a>
+      </p>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .ds-page :global(.section-head) {
+    margin-bottom: 1.25rem;
+  }
+
+  .ds-hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+
+  .ds-intro {
+    max-width: 74ch;
+    color: var(--text-muted);
+    margin-bottom: 2.5rem;
+  }
+
+  .ds-block {
+    margin-bottom: 3rem;
+  }
+
+  .ds-block h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .ds-block h3 {
+    font-size: 1rem;
+    font-family: var(--font-display);
+    color: var(--brand-primary);
+    margin: 1.5rem 0 0.75rem;
+  }
+
+  .ds-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin: 1rem 0 0.4rem;
+  }
+
+  .ds-note {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    max-width: 68ch;
+  }
+
+  .ds-code {
+    background: var(--color-ink);
+    color: var(--color-cream);
+    border-radius: var(--radius-md);
+    padding: 0.9rem 1.1rem;
+    overflow-x: auto;
+    margin: 0 0 0.6rem;
+  }
+
+  .ds-code code {
+    font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    font-size: 0.8rem;
+    white-space: pre;
+  }
+
+  .ds-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+  }
+
+  .ds-swatch-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 1rem;
+  }
+
+  .ds-swatch {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .ds-swatch-color {
+    width: 100%;
+    aspect-ratio: 1.6;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+  }
+
+  .ds-swatch code {
+    font-size: 0.72rem;
+    color: var(--text);
+  }
+
+  .ds-swatch span {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+  }
+
+  .ds-radius-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+
+  .ds-radius-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .ds-radius-box {
+    width: 64px;
+    height: 64px;
+    background: var(--brand-primary);
+  }
+
+  .ds-radius-item code {
+    font-size: 0.72rem;
+  }
+
+  .ds-radius-item span {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+  }
+
+  .ds-shadow-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    padding: 1rem 0 1.5rem;
+  }
+
+  .ds-shadow-box {
+    width: 160px;
+    height: 90px;
+    background: var(--color-white);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: ui-monospace, monospace;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+  }
+
+  .ds-shadow-card {
+    box-shadow: var(--shadow-card);
+  }
+
+  .ds-shadow-card-hover {
+    box-shadow: var(--shadow-card-hover);
+  }
+
+  .ds-type-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2.5rem;
+  }
+
+  .ds-type-row code {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+  }
+
+  .ds-type-display {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.6rem;
+    margin: 0.3rem 0 0;
+  }
+
+  .ds-type-body {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    max-width: 32ch;
+    margin: 0.3rem 0 0;
+  }
+
+  .ds-game-card-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+  }
+
+  @media (max-width: 700px) {
+    .ds-game-card-row {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .ds-game-card {
+    position: relative;
+    aspect-ratio: 3 / 5;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    border: 2px solid var(--border);
+    background: var(--bg-alt);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  }
+
+  .ds-game-card.is-clickable {
+    cursor: pointer;
+  }
+
+  .ds-game-card.is-clickable:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-card-hover);
+    z-index: 10;
+  }
+
+  .ds-game-card.is-selected {
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-primary) 35%, transparent);
+  }
+
+  .ds-game-card img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ds-badge-circle {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--brand-primary);
+    color: var(--color-white);
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--color-white);
+    box-shadow: var(--shadow-card-hover);
+  }
+
+  .ds-game-card-bar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.65);
+    color: #fff;
+    font-size: 0.68rem;
+    padding: 0.3rem 0.4rem;
+    text-align: center;
+  }
+
+  .ds-chip-demo {
+    --game-color-1: #e0403a;
+    --game-color-1-dim: color-mix(in srgb, var(--game-color-1) 18%, var(--bg));
+    --game-color-2: #3a7ee0;
+    --game-color-2-dim: color-mix(in srgb, var(--game-color-2) 18%, var(--bg));
+    --game-color-3: #3aa85a;
+    --game-color-3-dim: color-mix(in srgb, var(--game-color-3) 18%, var(--bg));
+    --game-color-4: #c4a020;
+    --game-color-4-dim: color-mix(in srgb, var(--game-color-4) 18%, var(--bg));
+  }
+
+  .ds-chip {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.25rem 0.7rem;
+    border-radius: var(--radius-pill);
+  }
+
+  .ds-chip-1 {
+    border: 1.5px solid var(--game-color-1);
+    background: var(--game-color-1-dim);
+    color: var(--game-color-1);
+  }
+  .ds-chip-2 {
+    border: 1.5px solid var(--game-color-2);
+    background: var(--game-color-2-dim);
+    color: var(--game-color-2);
+  }
+  .ds-chip-3 {
+    border: 1.5px solid var(--game-color-3);
+    background: var(--game-color-3-dim);
+    color: var(--game-color-3);
+  }
+  .ds-chip-4 {
+    border: 1.5px solid var(--game-color-4);
+    background: var(--game-color-4-dim);
+    color: var(--game-color-4);
+  }
+
+  .ds-dice-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .ds-die {
+    width: 46px;
+    height: 46px;
+    background: linear-gradient(145deg, #e8d5a0 0%, #d4b870 50%, #c0a040 100%);
+    border-radius: var(--radius-sm);
+    box-shadow: 3px 4px 8px rgba(var(--shadow-color-rgb, 43, 27, 18), 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.55);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    padding: 5px;
+  }
+
+  .ds-dot {
+    width: 7px;
+    height: 7px;
+    margin: auto;
+    border-radius: 50%;
+    background: #1a0f00;
+    box-shadow: 0 1px 2px rgba(var(--shadow-color-rgb, 43, 27, 18), 0.35);
+  }
+
+  .ds-dot-off {
+    visibility: hidden;
+  }
+
+  .ds-two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 1.5rem;
+  }
+
+  @media (max-width: 700px) {
+    .ds-two-col {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .ds-tabs {
+    display: flex;
+    gap: 0.25rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .ds-tab {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    padding: 0.55rem 0.9rem;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+  }
+
+  .ds-tab.active {
+    color: var(--brand-primary);
+    border-bottom-color: var(--brand-primary);
+  }
+
+  .ds-toast {
+    display: inline-block;
+    background: var(--color-ink);
+    color: var(--color-cream);
+    padding: 0.6rem 1.1rem;
+    border-radius: var(--radius-pill);
+    font-size: 0.85rem;
+    font-weight: 600;
+    box-shadow: var(--shadow-card-hover);
+  }
+
+  .ds-modal-box {
+    max-width: 420px;
+    background: var(--color-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-card-hover);
+    margin-top: 1rem;
+  }
+
+  .ds-modal-box strong {
+    display: block;
+    font-family: var(--font-display);
+    margin-bottom: 0.5rem;
+  }
+
+  .ds-modal-box p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+
+  .ds-games-grid {
+    margin-top: 1rem;
+  }
+
+  .ds-game-item {
+    background: var(--color-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.1rem 1.25rem;
+  }
+
+  .ds-game-item h3 {
+    margin: 0 0 0.4rem;
+    color: var(--text);
+  }
+
+  .ds-game-item p {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .ds-game-links {
+    display: flex;
+    gap: 0.9rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--brand-primary);
+  }
+
+  .ds-footer-cta {
+    text-align: center;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-weight: 600;
+  }
+</style>
+
+<script>
+  document.querySelectorAll(".ds-tab").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".ds-tab").forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+    });
+  });
+</script>
