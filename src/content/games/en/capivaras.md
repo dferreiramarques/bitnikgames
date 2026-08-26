@@ -1,4 +1,5 @@
 ---
+order: 2
 title: "Capivaras"
 shortDescription: "Description coming soon."
 players: { min: 2, max: 6 }
