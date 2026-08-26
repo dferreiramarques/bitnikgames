@@ -1,4 +1,5 @@
 ---
+featured: true
 title: "Capivaras PnP"
 shortDescription: "Descrição a preencher."
 access: "paid"
