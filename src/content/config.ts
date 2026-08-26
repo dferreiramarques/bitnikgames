@@ -41,6 +41,11 @@ const pnp = defineCollection({
     access: z.enum(["free", "paid", "pwyw"]),
     price: z.string().optional(),
     fileUrl: z.string().default("#"),
+    // Para PnPs pagos vendidos fora do site (ex. itch.io) em vez de um
+    // download direto — quando presente, tem prioridade sobre fileUrl no
+    // botão de CTA (ver PnpDetailPage.astro). Mesmo padrão de games.externalUrl.
+    externalUrl: z.string().url().optional(),
+    externalLabel: z.string().optional(),
     players: z.object({ min: z.number(), max: z.number() }).optional(),
     duration: z.number().optional(),
     tags: z.array(z.string()).default([]),

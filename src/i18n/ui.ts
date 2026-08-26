@@ -57,6 +57,7 @@ export const ui = {
       players: "jogadores",
       duration: "min",
       downloadPlaceholder: "Ficheiro placeholder — a caminho em breve",
+      buyExternal: "Comprar externamente",
     },
     blog: {
       eyebrow: "Blog",
@@ -162,6 +163,7 @@ export const ui = {
       players: "players",
       duration: "min",
       downloadPlaceholder: "File placeholder — coming soon",
+      buyExternal: "Buy externally",
     },
     blog: {
       eyebrow: "Blog",

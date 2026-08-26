@@ -18,7 +18,8 @@ const { locale, entry, slug } = Astro.props;
 const copy = t(locale).pnp;
 const nav = t(locale).nav;
 const otherLocale: Locale = locale === "pt" ? "en" : "pt";
-const { title, shortDescription, access, price, fileUrl, players, duration, tags } = entry.data;
+const { title, shortDescription, access, price, fileUrl, externalUrl, externalLabel, players, duration, tags } =
+  entry.data;
 const { Content } = await render(entry);
 
 const badge = pnpBadge(locale, access, price);
@@ -66,7 +67,11 @@ const coverSrc = hasCoverImage(slug) ? `/cards/${slug}.png` : null;
         )}
 
         <div class="detail-cta">
-          {fileReady ? (
+          {externalUrl ? (
+            <a class="btn btn-primary" href={externalUrl} target="_blank" rel="noreferrer">
+              {externalLabel ?? copy.buyExternal}
+            </a>
+          ) : fileReady ? (
             <a class="btn btn-primary" href={fileUrl} download>
               {copy.download}
             </a>
