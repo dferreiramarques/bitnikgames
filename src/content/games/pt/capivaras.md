@@ -1,5 +1,5 @@
 ---
-order: 2
+order: 1
 title: "Capivaras"
 shortDescription: "Descrição a preencher."
 players: { min: 2, max: 6 }
