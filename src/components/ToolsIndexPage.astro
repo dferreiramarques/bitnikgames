@@ -2,6 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import { pathTo, type Locale } from "../i18n/routes";
 import { t } from "../i18n/ui";
+import { hasCoverImage } from "../lib/coverImage";
 
 interface Props {
   locale: Locale;
@@ -37,7 +38,9 @@ const tools = [
       <div class="grid grid-3">
         {tools.map((tool) => (
           <a class="card" href={pathTo(locale, "tools", tool.slug)}>
-            <div class="card-media" aria-hidden="true">{tool.title}</div>
+            <div class="card-media" aria-hidden="true">
+              {hasCoverImage(tool.slug) ? <img src={`/cards/${tool.slug}.png`} alt="" /> : tool.title}
+            </div>
             <div class="card-body">
               <h3 class="card-title">{tool.title}</h3>
               <p class="card-excerpt">{tool.description[locale]}</p>

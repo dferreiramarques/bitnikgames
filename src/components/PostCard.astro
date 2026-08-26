@@ -2,6 +2,7 @@
 import type { CollectionEntry } from "astro:content";
 import { pathTo, type Locale } from "../i18n/routes";
 import { t } from "../i18n/ui";
+import { hasCoverImage } from "../lib/coverImage";
 
 interface Props {
   locale: Locale;
@@ -13,6 +14,7 @@ const { locale, post, slug } = Astro.props;
 const copy = t(locale).blog;
 const { title, excerpt, readingMinutes, publishedDate } = post.data;
 const href = pathTo(locale, "blog", slug);
+const coverSrc = hasCoverImage(slug) ? `/cards/${slug}.png` : null;
 
 const dateFormatted = publishedDate.toLocaleDateString(locale === "pt" ? "pt-PT" : "en-GB", {
   year: "numeric",
@@ -22,7 +24,9 @@ const dateFormatted = publishedDate.toLocaleDateString(locale === "pt" ? "pt-PT"
 ---
 
 <a class="card" href={href}>
-  <div class="card-media" aria-hidden="true">{title}</div>
+  <div class="card-media" aria-hidden="true">
+    {coverSrc ? <img src={coverSrc} alt="" /> : title}
+  </div>
   <div class="card-body">
     <div class="card-meta">
       <span>{dateFormatted}</span>
