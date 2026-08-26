@@ -41,6 +41,7 @@ const pnp = defineCollection({
     players: z.object({ min: z.number(), max: z.number() }).optional(),
     duration: z.number().optional(),
     tags: z.array(z.string()).default([]),
+    featured: z.boolean().default(false),
     publishedDate: z.coerce.date(),
   }),
 });
@@ -52,6 +53,7 @@ const posts = defineCollection({
     excerpt: z.string(),
     readingMinutes: z.number().default(4),
     tags: z.array(z.string()).default([]),
+    featured: z.boolean().default(false),
     publishedDate: z.coerce.date(),
   }),
 });

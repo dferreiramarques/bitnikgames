@@ -15,21 +15,24 @@ const { locale } = Astro.props;
 const copy = t(locale).home;
 const otherLocale: Locale = locale === "pt" ? "en" : "pt";
 
+// Se houver entradas marcadas featured:true (checkbox "Destacar na
+// homepage" no CMS), mostra essas; caso contrário, cai para as mais
+// recentes por publishedDate — nunca uma secção vazia por ninguém ainda
+// ter escolhido nada.
+function pickFeatured<T extends { data: { featured?: boolean; publishedDate: Date } }>(entries: T[]): T[] {
+  const byRecency = [...entries].sort((a, b) => b.data.publishedDate.valueOf() - a.data.publishedDate.valueOf());
+  const featured = byRecency.filter((e) => e.data.featured);
+  return (featured.length > 0 ? featured : byRecency).slice(0, 3);
+}
+
 const allGames = await getCollection("games", ({ id }) => id.startsWith(`${locale}/`));
-const featuredGames = allGames
-  .filter((g) => g.data.featured)
-  .sort((a, b) => b.data.publishedDate.valueOf() - a.data.publishedDate.valueOf())
-  .slice(0, 3);
+const featuredGames = pickFeatured(allGames);
 
 const allPnp = await getCollection("pnp", ({ id }) => id.startsWith(`${locale}/`));
-const featuredPnp = allPnp
-  .sort((a, b) => b.data.publishedDate.valueOf() - a.data.publishedDate.valueOf())
-  .slice(0, 3);
+const featuredPnp = pickFeatured(allPnp);
 
 const allPosts = await getCollection("posts", ({ id }) => id.startsWith(`${locale}/`));
-const latestPosts = allPosts
-  .sort((a, b) => b.data.publishedDate.valueOf() - a.data.publishedDate.valueOf())
-  .slice(0, 3);
+const latestPosts = pickFeatured(allPosts);
 
 const slugOf = (id: string) => id.split("/").slice(1).join("/");
 ---
