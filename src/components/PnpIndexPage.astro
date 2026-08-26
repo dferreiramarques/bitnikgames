@@ -4,6 +4,7 @@ import Layout from "../layouts/Layout.astro";
 import PnpCard from "./PnpCard.astro";
 import { pathTo, type Locale } from "../i18n/routes";
 import { t } from "../i18n/ui";
+import { sortEntries } from "../lib/sortEntries";
 
 interface Props {
   locale: Locale;
@@ -13,9 +14,7 @@ const { locale } = Astro.props;
 const copy = t(locale).pnp;
 const otherLocale: Locale = locale === "pt" ? "en" : "pt";
 
-const items = (await getCollection("pnp", ({ id }) => id.startsWith(`${locale}/`))).sort(
-  (a, b) => b.data.publishedDate.valueOf() - a.data.publishedDate.valueOf()
-);
+const items = sortEntries(await getCollection("pnp", ({ id }) => id.startsWith(`${locale}/`)));
 const slugOf = (id: string) => id.split("/").slice(1).join("/");
 ---
 

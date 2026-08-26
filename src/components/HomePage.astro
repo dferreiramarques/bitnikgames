@@ -6,6 +6,7 @@ import PnpCard from "./PnpCard.astro";
 import PostCard from "./PostCard.astro";
 import { pathTo, type Locale } from "../i18n/routes";
 import { t } from "../i18n/ui";
+import { sortEntries } from "../lib/sortEntries";
 
 interface Props {
   locale: Locale;
@@ -16,13 +17,16 @@ const copy = t(locale).home;
 const otherLocale: Locale = locale === "pt" ? "en" : "pt";
 
 // Se houver entradas marcadas featured:true (checkbox "Destacar na
-// homepage" no CMS), mostra essas; caso contrário, cai para as mais
-// recentes por publishedDate — nunca uma secção vazia por ninguém ainda
+// homepage" no CMS), mostra essas — na ordem manual escolhida no CMS
+// (drag-and-drop), com mais recente como desempate; caso contrário, cai
+// para sortEntries() normal — nunca uma secção vazia por ninguém ainda
 // ter escolhido nada.
-function pickFeatured<T extends { data: { featured?: boolean; publishedDate: Date } }>(entries: T[]): T[] {
-  const byRecency = [...entries].sort((a, b) => b.data.publishedDate.valueOf() - a.data.publishedDate.valueOf());
-  const featured = byRecency.filter((e) => e.data.featured);
-  return (featured.length > 0 ? featured : byRecency).slice(0, 3);
+function pickFeatured<T extends { data: { featured?: boolean; order?: number; publishedDate: Date } }>(
+  entries: T[]
+): T[] {
+  const ordered = sortEntries(entries);
+  const featured = ordered.filter((e) => e.data.featured);
+  return (featured.length > 0 ? featured : ordered).slice(0, 3);
 }
 
 const allGames = await getCollection("games", ({ id }) => id.startsWith(`${locale}/`));

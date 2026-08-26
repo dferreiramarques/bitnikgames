@@ -20,6 +20,9 @@ const games = defineCollection({
       externalLabel: z.string().optional(),
       tags: z.array(z.string()).default([]),
       featured: z.boolean().default(false),
+      // Ordem manual (drag-and-drop no CMS); 0 = ainda ninguém mexeu, cai
+      // para "mais recente primeiro" (ver src/lib/sortEntries.ts).
+      order: z.number().default(0),
       publishedDate: z.coerce.date(),
     })
     // status "buy-external" sem externalUrl faz o botão de compra desaparecer
@@ -42,6 +45,7 @@ const pnp = defineCollection({
     duration: z.number().optional(),
     tags: z.array(z.string()).default([]),
     featured: z.boolean().default(false),
+    order: z.number().default(0),
     publishedDate: z.coerce.date(),
   }),
 });
@@ -54,6 +58,7 @@ const posts = defineCollection({
     readingMinutes: z.number().default(4),
     tags: z.array(z.string()).default([]),
     featured: z.boolean().default(false),
+    order: z.number().default(0),
     publishedDate: z.coerce.date(),
   }),
 });

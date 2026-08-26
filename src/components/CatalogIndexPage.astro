@@ -4,6 +4,7 @@ import Layout from "../layouts/Layout.astro";
 import GameCard from "./GameCard.astro";
 import { pathTo, type Locale } from "../i18n/routes";
 import { t } from "../i18n/ui";
+import { sortEntries } from "../lib/sortEntries";
 
 interface Props {
   locale: Locale;
@@ -13,9 +14,7 @@ const { locale } = Astro.props;
 const copy = t(locale).catalog;
 const otherLocale: Locale = locale === "pt" ? "en" : "pt";
 
-const games = (await getCollection("games", ({ id }) => id.startsWith(`${locale}/`))).sort(
-  (a, b) => b.data.publishedDate.valueOf() - a.data.publishedDate.valueOf()
-);
+const games = sortEntries(await getCollection("games", ({ id }) => id.startsWith(`${locale}/`)));
 const slugOf = (id: string) => id.split("/").slice(1).join("/");
 ---
 
