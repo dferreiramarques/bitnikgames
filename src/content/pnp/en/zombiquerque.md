@@ -1,4 +1,5 @@
 ---
+featured: true
 title: "Zombiquerque"
 shortDescription: "Description coming soon."
 access: "free"
