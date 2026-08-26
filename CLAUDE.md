@@ -41,6 +41,12 @@ npm run build   # corre astro check (tipos) + astro build — apanha a maioria d
 
 Cada push para uma branch que não seja `main` gera um preview deploy automático na Vercel (link nos checks do PR/commit no GitHub) — útil para veres a alteração antes de ires para produção.
 
+## Ficheiros de print & play: GitHub Release assets, não `public/`
+
+Os PDFs de print & play não vivem em `public/` — ficam como assets da release [`pnp-files`](https://github.com/dferreiramarques/bitnikgames/releases/tag/pnp-files) neste repo. Isto dá tracking de downloads de borla (contador visível no GitHub, sem analytics nem backend) e mantém PDFs grandes fora do histórico do site.
+
+Para publicar um ficheiro novo: `gh release upload pnp-files caminho/para/ficheiro.pdf --repo dferreiramarques/bitnikgames` (ou arrasta o PDF para a release na UI do GitHub), depois copia o link do asset para o campo `fileUrl` da entrada correspondente em `src/content/pnp/{pt,en}/<slug>.md` (substitui o `"#"` placeholder). `PnpDetailPage.astro` já trata isto automaticamente — o botão "Descarregar" fica ativo assim que `fileUrl !== "#"`.
+
 ## O que ainda é placeholder (ver README secção 5 para a lista completa)
 
-Checkout dos jogos "Comprar" (botão desativado), ficheiros de print & play (`fileUrl: "#"`), imagens dos jogos (gradiente com o nome em vez de arte real). A newsletter já está ligada a sério (Buttondown, `buttondown.com/bitnikgames`) — ver o `<form>` em `HomePage.astro`.
+Checkout dos jogos "Comprar" (botão desativado), ficheiros de print & play (`fileUrl: "#"` — ver secção acima para o fluxo de publicar), imagens dos jogos (gradiente com o nome em vez de arte real). A newsletter já está ligada a sério (Buttondown, `buttondown.com/bitnikgames`) — ver o `<form>` em `HomePage.astro`.
