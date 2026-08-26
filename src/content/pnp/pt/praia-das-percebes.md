@@ -1,4 +1,5 @@
 ---
+order: 4
 title: "Praia das Percebes"
 shortDescription: "Descrição a preencher."
 access: "paid"
