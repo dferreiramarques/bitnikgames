@@ -107,7 +107,18 @@ const slugOf = (id: string) => id.split("/").slice(1).join("/");
     </div>
   </section>
 
-  <section class="section">
+  <section class="section play-online">
+    <div class="container play-online-inner">
+      <div class="section-head play-online-head">
+        <span class="eyebrow">{copy.playOnlineEyebrow}</span>
+        <h2>{copy.playOnlineTitle}</h2>
+        <p>{copy.playOnlineSubtitle}</p>
+      </div>
+      <a class="btn btn-outline" href={pathTo(locale, "playOnline")}>{copy.playOnlineCta}</a>
+    </div>
+  </section>
+
+  <section class="section section-alt">
     <div class="container">
       <div class="section-head">
         <span class="eyebrow">{copy.blogEyebrow}</span>
@@ -348,6 +359,18 @@ const slugOf = (id: string) => id.split("/").slice(1).join("/");
 
   .section-cta {
     margin-top: 2rem;
+  }
+
+  .play-online-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .play-online-head {
+    margin-bottom: 0;
   }
 
   .newsletter {

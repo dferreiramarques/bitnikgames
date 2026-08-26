@@ -1,0 +1,67 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { pathTo, type Locale } from "../i18n/routes";
+import { t } from "../i18n/ui";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = t(locale).playOnline;
+const otherLocale: Locale = locale === "pt" ? "en" : "pt";
+---
+
+<Layout locale={locale} altPath={pathTo(otherLocale, "playOnline")} title={copy.title} description={copy.subtitle}>
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">{copy.eyebrow}</span>
+        <h1>{copy.title}</h1>
+        <p>{copy.subtitle}</p>
+      </div>
+
+      <div class="empty-state">
+        <span class="badge badge-soon">{"⏳"}</span>
+        <div>
+          <h2>{copy.comingSoonTitle}</h2>
+          <p>{copy.comingSoonBody}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .empty-state {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem;
+    max-width: 640px;
+    padding: 2rem;
+    background: var(--bg-alt);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-lg);
+  }
+
+  .empty-state .badge {
+    font-size: 1.1rem;
+    padding: 0.55rem 0.7rem;
+  }
+
+  .empty-state h2 {
+    font-size: 1.2rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .empty-state p {
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  @media (max-width: 500px) {
+    .empty-state {
+      flex-direction: column;
+    }
+  }
+</style>

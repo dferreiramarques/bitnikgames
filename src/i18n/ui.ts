@@ -5,8 +5,9 @@ export const ui = {
     nav: {
       catalog: "Catálogo",
       printAndPlay: "Print & Play",
+      playOnline: "Jogar Online",
       blog: "Blog",
-      tools: "Ferramentas de Design",
+      tools: "Ferramentas",
       about: "Sobre",
       lang: "EN",
     },
@@ -25,6 +26,10 @@ export const ui = {
       pnpTitle: "Imprime, corta, joga",
       pnpSubtitle: "Protótipos e jogos leves prontos a imprimir em casa — alguns grátis, outros pay-what-you-want.",
       pnpCta: "Ver todos os print & play",
+      playOnlineEyebrow: "Jogar Online",
+      playOnlineTitle: "Joga sem sair do browser",
+      playOnlineSubtitle: "Réplicas digitais dos nossos jogos de tabuleiro — sem instalar nada, sem esperar pelo correio.",
+      playOnlineCta: "Ver jogos online",
       blogEyebrow: "Blog",
       blogTitle: "Notas de game design",
       blogSubtitle: "Processo, decisões e falhas úteis por trás de cada jogo.",
@@ -60,13 +65,21 @@ export const ui = {
       readMore: "Ler artigo",
       minRead: "min de leitura",
     },
+    playOnline: {
+      eyebrow: "Jogar Online",
+      title: "Jogar online",
+      subtitle:
+        "Réplicas digitais dos jogos da bitnikgames, para jogar direto no browser — sem descarregar nada. Ainda não há nenhuma publicada; ficam aqui assim que estiverem prontas.",
+      comingSoonTitle: "Ainda não há jogos online publicados",
+      comingSoonBody: "Estamos a preparar as primeiras réplicas. Volta em breve.",
+    },
     tools: {
       eyebrow: "Ferramentas de Design",
       title: "Ferramentas de prototipagem",
       subtitle:
         "Utilitários que usamos internamente para prototipar jogos — geradores, calculadoras, o que for preciso. Partilhados aqui porque também te podem ser úteis.",
       openTool: "Abrir ferramenta",
-      backToTools: "Ferramentas de Design",
+      backToTools: "Ferramentas",
     },
     about: {
       eyebrow: "Sobre",
@@ -95,8 +108,9 @@ export const ui = {
     nav: {
       catalog: "Catalog",
       printAndPlay: "Print & Play",
+      playOnline: "Play Online",
       blog: "Blog",
-      tools: "Designer's Tools",
+      tools: "Tools",
       about: "About",
       lang: "PT",
     },
@@ -115,6 +129,10 @@ export const ui = {
       pnpTitle: "Print it, cut it, play it",
       pnpSubtitle: "Prototypes and light games ready to print at home — some free, some pay-what-you-want.",
       pnpCta: "See all print & play",
+      playOnlineEyebrow: "Play Online",
+      playOnlineTitle: "Play without leaving your browser",
+      playOnlineSubtitle: "Digital replicas of our board games — nothing to install, nothing to wait for in the mail.",
+      playOnlineCta: "See online games",
       blogEyebrow: "Blog",
       blogTitle: "Game design notes",
       blogSubtitle: "Process, decisions, and useful failures behind each game.",
@@ -150,13 +168,21 @@ export const ui = {
       readMore: "Read article",
       minRead: "min read",
     },
+    playOnline: {
+      eyebrow: "Play Online",
+      title: "Play online",
+      subtitle:
+        "Digital replicas of bitnikgames titles, playable straight in your browser — nothing to download. None published yet; they'll show up here as they're ready.",
+      comingSoonTitle: "No online games published yet",
+      comingSoonBody: "We're working on the first replicas. Check back soon.",
+    },
     tools: {
       eyebrow: "Designer's Tools",
       title: "Prototyping tools",
       subtitle:
         "Utilities we use internally to prototype games — generators, calculators, whatever's needed. Shared here because they might be useful to you too.",
       openTool: "Open tool",
-      backToTools: "Designer's Tools",
+      backToTools: "Tools",
     },
     about: {
       eyebrow: "About",

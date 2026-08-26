@@ -13,6 +13,7 @@ export const routes = {
   home: { pt: "", en: "" },
   catalog: { pt: "catalogo", en: "catalog" },
   printAndPlay: { pt: "print-and-play", en: "print-and-play" },
+  playOnline: { pt: "jogar-online", en: "play-online" },
   blog: { pt: "blog", en: "blog" },
   tools: { pt: "ferramentas", en: "designer-tools" },
   about: { pt: "sobre", en: "about" },
