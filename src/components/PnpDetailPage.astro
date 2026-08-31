@@ -5,7 +5,7 @@ import Layout from "../layouts/Layout.astro";
 import Badge from "./Badge.astro";
 import { pathTo, type Locale } from "../i18n/routes";
 import { t } from "../i18n/ui";
-import { pnpBadge } from "../lib/badges";
+import { entryBadge } from "../lib/badges";
 import { hasCoverImage } from "../lib/coverImage";
 
 interface Props {
@@ -18,11 +18,11 @@ const { locale, entry, slug } = Astro.props;
 const copy = t(locale).pnp;
 const nav = t(locale).nav;
 const otherLocale: Locale = locale === "pt" ? "en" : "pt";
-const { title, shortDescription, access, price, fileUrl, externalUrl, externalLabel, players, duration, tags } =
+const { title, shortDescription, status, price, fileUrl, externalUrl, externalLabel, players, duration, age, tags } =
   entry.data;
 const { Content } = await render(entry);
 
-const badge = pnpBadge(locale, access, price);
+const badge = entryBadge(locale, status, price);
 const fileReady = fileUrl !== "#";
 const coverSrc = hasCoverImage(slug) ? `/cards/${slug}.png` : null;
 ---
@@ -45,7 +45,7 @@ const coverSrc = hasCoverImage(slug) ? `/cards/${slug}.png` : null;
         <h1>{title}</h1>
         <p class="detail-lede">{shortDescription}</p>
 
-        {(players || duration) && (
+        {(players || duration || age) && (
           <ul class="detail-meta">
             {players && (
               <li>
@@ -54,6 +54,9 @@ const coverSrc = hasCoverImage(slug) ? `/cards/${slug}.png` : null;
             )}
             {duration && (
               <li><strong>{duration}</strong> {copy.duration}</li>
+            )}
+            {age && (
+              <li><strong>{age} {copy.age}</strong></li>
             )}
           </ul>
         )}

@@ -5,54 +5,57 @@ import { glob } from "astro/loaders";
 // ficheiro para a mesma obra — é assim que conseguimos, por exemplo, ligar
 // /pt/catalogo/bulbous a /en/catalog/bulbous sem adivinhar nada.
 
+// Jogos e print & play partilham o mesmo vocabulário de campos — para que o
+// mesmo frontmatter possa ser copiado de uma pasta para a outra sem editar
+// nomes de campos. "status" cobre tanto o percurso de compra de um jogo
+// físico (buy-now/buy-external/coming-soon) como o de acesso a um ficheiro
+// PnP (free/paid/pwyw); cada coleção normalmente só usa o subconjunto que
+// lhe interessa, mas nada impede um PnP "coming-soon" ou um jogo "free".
+const entryStatus = z.enum(["buy-now", "buy-external", "coming-soon", "free", "paid", "pwyw"]);
+
+const sharedFields = {
+  title: z.string(),
+  shortDescription: z.string(),
+  players: z.object({ min: z.number(), max: z.number() }).optional(),
+  duration: z.number().optional(), // minutos
+  age: z.number().optional(),
+  status: entryStatus,
+  price: z.string().optional(),
+  // Para itens vendidos fora do site (ex. itch.io) em vez de um checkout ou
+  // download direto — quando presente, tem prioridade no botão de CTA (ver
+  // CatalogDetailPage.astro / PnpDetailPage.astro).
+  externalUrl: z.string().url().optional(),
+  externalLabel: z.string().optional(),
+  tags: z.array(z.string()).default([]),
+  featured: z.boolean().default(false),
+  // Ordem manual (drag-and-drop no CMS); 0 = ainda ninguém mexeu, cai
+  // para "mais recente primeiro" (ver src/lib/sortEntries.ts).
+  order: z.number().default(0),
+  publishedDate: z.coerce.date(),
+};
+
+// status "buy-external" sem externalUrl faz o botão de compra desaparecer
+// silenciosamente na página — falhar aqui em vez de em produção.
+const requiresExternalUrl = (data: { status: z.infer<typeof entryStatus>; externalUrl?: string }) =>
+  data.status !== "buy-external" || Boolean(data.externalUrl);
+const externalUrlRefinement = {
+  message: 'externalUrl é obrigatório quando status é "buy-external"',
+  path: ["externalUrl"],
+};
+
 const games = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/games" }),
-  schema: z
-    .object({
-      title: z.string(),
-      shortDescription: z.string(),
-      players: z.object({ min: z.number(), max: z.number() }),
-      duration: z.number(), // minutos
-      age: z.number(),
-      status: z.enum(["buy-now", "buy-external", "coming-soon"]),
-      price: z.string().optional(),
-      externalUrl: z.string().url().optional(),
-      externalLabel: z.string().optional(),
-      tags: z.array(z.string()).default([]),
-      featured: z.boolean().default(false),
-      // Ordem manual (drag-and-drop no CMS); 0 = ainda ninguém mexeu, cai
-      // para "mais recente primeiro" (ver src/lib/sortEntries.ts).
-      order: z.number().default(0),
-      publishedDate: z.coerce.date(),
-    })
-    // status "buy-external" sem externalUrl faz o botão de compra desaparecer
-    // silenciosamente na página do jogo — falhar aqui em vez de em produção.
-    .refine((data) => data.status !== "buy-external" || Boolean(data.externalUrl), {
-      message: "externalUrl é obrigatório quando status é \"buy-external\"",
-      path: ["externalUrl"],
-    }),
+  schema: z.object(sharedFields).refine(requiresExternalUrl, externalUrlRefinement),
 });
 
 const pnp = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/pnp" }),
-  schema: z.object({
-    title: z.string(),
-    shortDescription: z.string(),
-    access: z.enum(["free", "paid", "pwyw"]),
-    price: z.string().optional(),
-    fileUrl: z.string().default("#"),
-    // Para PnPs pagos vendidos fora do site (ex. itch.io) em vez de um
-    // download direto — quando presente, tem prioridade sobre fileUrl no
-    // botão de CTA (ver PnpDetailPage.astro). Mesmo padrão de games.externalUrl.
-    externalUrl: z.string().url().optional(),
-    externalLabel: z.string().optional(),
-    players: z.object({ min: z.number(), max: z.number() }).optional(),
-    duration: z.number().optional(),
-    tags: z.array(z.string()).default([]),
-    featured: z.boolean().default(false),
-    order: z.number().default(0),
-    publishedDate: z.coerce.date(),
-  }),
+  schema: z
+    .object({
+      ...sharedFields,
+      fileUrl: z.string().default("#"),
+    })
+    .refine(requiresExternalUrl, externalUrlRefinement),
 });
 
 const posts = defineCollection({

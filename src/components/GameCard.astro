@@ -3,7 +3,7 @@ import type { CollectionEntry } from "astro:content";
 import Badge from "./Badge.astro";
 import { pathTo, type Locale } from "../i18n/routes";
 import { t } from "../i18n/ui";
-import { gameBadge } from "../lib/badges";
+import { entryBadge } from "../lib/badges";
 import { hasCoverImage } from "../lib/coverImage";
 
 interface Props {
@@ -16,7 +16,7 @@ const { locale, game, slug } = Astro.props;
 const copy = t(locale).catalog;
 const { title, shortDescription, players, duration, age, status, price } = game.data;
 
-const badge = gameBadge(locale, status);
+const badge = entryBadge(locale, status, price);
 const href = pathTo(locale, "catalog", slug);
 const coverSrc = hasCoverImage(slug) ? `/cards/${slug}.png` : null;
 ---
@@ -27,9 +27,11 @@ const coverSrc = hasCoverImage(slug) ? `/cards/${slug}.png` : null;
   </div>
   <div class="card-body">
     <div class="card-meta">
-      <span>{players.min === players.max ? players.min : `${players.min}–${players.max}`} {copy.players}</span>
-      <span>{duration} {copy.duration}</span>
-      <span>{age} {copy.age}</span>
+      {players && (
+        <span>{players.min === players.max ? players.min : `${players.min}–${players.max}`} {copy.players}</span>
+      )}
+      {duration && <span>{duration} {copy.duration}</span>}
+      {age && <span>{age} {copy.age}</span>}
     </div>
     <h3 class="card-title">{title}</h3>
     <p class="card-excerpt">{shortDescription}</p>

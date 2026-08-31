@@ -5,7 +5,7 @@ import Layout from "../layouts/Layout.astro";
 import Badge from "./Badge.astro";
 import { pathTo, type Locale } from "../i18n/routes";
 import { t } from "../i18n/ui";
-import { gameBadge } from "../lib/badges";
+import { entryBadge } from "../lib/badges";
 import { hasCoverImage } from "../lib/coverImage";
 
 interface Props {
@@ -23,7 +23,7 @@ const { title, shortDescription, players, duration, age, status, price, external
   entry.data;
 const { Content } = await render(entry);
 
-const badge = gameBadge(locale, status);
+const badge = entryBadge(locale, status, price);
 const coverSrc = hasCoverImage(slug) ? `/cards/${slug}.png` : null;
 ---
 
@@ -45,11 +45,21 @@ const coverSrc = hasCoverImage(slug) ? `/cards/${slug}.png` : null;
         <h1>{title}</h1>
         <p class="detail-lede">{shortDescription}</p>
 
-        <ul class="detail-meta">
-          <li><strong>{players.min === players.max ? players.min : `${players.min}–${players.max}`}</strong> {copy.players}</li>
-          <li><strong>{duration}</strong> {copy.duration}</li>
-          <li><strong>{age} {copy.age}</strong></li>
-        </ul>
+        {(players || duration || age) && (
+          <ul class="detail-meta">
+            {players && (
+              <li>
+                <strong>{players.min === players.max ? players.min : `${players.min}–${players.max}`}</strong> {copy.players}
+              </li>
+            )}
+            {duration && (
+              <li><strong>{duration}</strong> {copy.duration}</li>
+            )}
+            {age && (
+              <li><strong>{age} {copy.age}</strong></li>
+            )}
+          </ul>
+        )}
 
         {tags.length > 0 && (
           <ul class="detail-tags">

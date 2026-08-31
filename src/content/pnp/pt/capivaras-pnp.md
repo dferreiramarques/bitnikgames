@@ -2,7 +2,7 @@
 featured: true
 title: "Capivaras PnP"
 shortDescription: "Descrição a preencher."
-access: "paid"
+status: "paid"
 price: "2€"
 fileUrl: "#"
 players: { min: 2, max: 6 }

@@ -8,26 +8,17 @@ export interface BadgeInfo {
   label: string;
 }
 
-export function gameBadge(locale: Locale, status: CollectionEntry<"games">["data"]["status"]): BadgeInfo {
+type Status = CollectionEntry<"games">["data"]["status"] | CollectionEntry<"pnp">["data"]["status"];
+
+export function entryBadge(locale: Locale, status: Status, price?: string): BadgeInfo {
   const badges = t(locale).badges;
-  const badgeByStatus: Record<typeof status, BadgeInfo> = {
+  const badgeByStatus: Record<Status, BadgeInfo> = {
     "buy-now": { variant: "paid", label: badges.buyNow },
     "buy-external": { variant: "external", label: badges.buyExternal },
     "coming-soon": { variant: "soon", label: badges.comingSoon },
-  };
-  return badgeByStatus[status];
-}
-
-export function pnpBadge(
-  locale: Locale,
-  access: CollectionEntry<"pnp">["data"]["access"],
-  price?: string
-): BadgeInfo {
-  const badges = t(locale).badges;
-  const badgeByAccess: Record<typeof access, BadgeInfo> = {
     free: { variant: "free", label: badges.free },
     paid: { variant: "paid", label: price ?? badges.paid },
     pwyw: { variant: "pwyw", label: badges.pwyw },
   };
-  return badgeByAccess[access];
+  return badgeByStatus[status];
 }
