@@ -30,7 +30,11 @@ const sharedFields = {
   // omissão fica só como link "Ver trailer"; com videoEmbed:true, o player
   // fica embutido a seguir à descrição (ver CatalogDetailPage.astro).
   video: z.string().url().optional(),
-  videoEmbed: z.boolean().default(false),
+  // coerce em vez de boolean(): um valor mal escrito (ex. o link colado
+  // aqui por engano) já partiu o build inteiro do site uma vez — com
+  // coerce isso vira só "trata como true" em vez de derrubar a sync de
+  // conteúdo para todas as páginas.
+  videoEmbed: z.coerce.boolean().default(false),
   tags: z.array(z.string()).default([]),
   featured: z.boolean().default(false),
   // Ordem manual (drag-and-drop no CMS); 0 = ainda ninguém mexeu, cai
