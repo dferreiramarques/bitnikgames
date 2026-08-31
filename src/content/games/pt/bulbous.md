@@ -16,3 +16,5 @@ Em Bulbous, cada carta esconde a tua capacidade de influenciar criaturas estranh
 Com quatro espécies de criaturas e valores de 1 a 4, o truque não está só na sorte da carta que sai — está em saber quando apostar, quando recuar, e quando arriscar tudo numa aposta que pode desmascarar toda a gente à mesa.
 
 Fácil de aprender, difícil de blefar bem: 30 minutos que se tornam sempre "só mais uma ronda."
+
+videoEmbed [watch?v=fIs2JNOUWeU]
