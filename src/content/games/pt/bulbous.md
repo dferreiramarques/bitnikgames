@@ -9,8 +9,8 @@ price: "18€"
 tags: ["trick-taking", "apostas", "cartas"]
 featured: true
 publishedDate: 2026-08-26
-videoEmbed: watch?v=fIs2JNOUWeU
-
+video: "https://www.youtube.com/watch?v=fIs2JNOUWeU"
+videoEmbed: true
 ---
 
 Em Bulbous, cada carta esconde a tua capacidade de influenciar criaturas estranhamente fofas (ou fofamente estranhas) — apostando um valor que só tu conheces até ao momento da revelação. A cada ronda, os jogadores apostam o seu charme às cegas na criatura mais valiosa, tentando ler as bluffs alheios sem denunciar os próprios.
