@@ -66,7 +66,7 @@ const slugOf = (id: string) => id.split("/").slice(1).join("/");
         </div>
 
         <div class="piece-orbit piece-hex">
-          <div class="piece-face piece-hex-face"></div>
+          <img class="piece-face piece-character" src="/characters/zombiequerque.png" alt="" width="88" height="78" />
         </div>
 
         <div class="piece-orbit piece-coin">
@@ -167,8 +167,8 @@ const slugOf = (id: string) => id.split("/").slice(1).join("/");
 
 <style>
   .hero {
-    padding-block: clamp(3.5rem, 8vw, 6rem) clamp(2.5rem, 6vw, 4rem);
-    background: radial-gradient(circle at top right, var(--color-cream-soft), var(--bg) 60%);
+    padding-block: clamp(2.25rem, 5vw, 3.75rem) clamp(1.75rem, 4vw, 2.75rem);
+    background: radial-gradient(circle at top right, var(--color-white), var(--bg) 60%);
     overflow: hidden;
   }
 
@@ -212,7 +212,7 @@ const slugOf = (id: string) => id.split("/").slice(1).join("/");
 
   .hero-visual {
     position: relative;
-    width: min(460px, 82vw);
+    width: min(380px, 72vw);
     aspect-ratio: 1;
     flex: 0 0 auto;
     margin-inline: auto;
@@ -264,14 +264,6 @@ const slugOf = (id: string) => id.split("/").slice(1).join("/");
     box-shadow: var(--shadow-card-hover);
   }
 
-  .piece-hex-face {
-    width: 96px;
-    height: 96px;
-    background: linear-gradient(160deg, var(--color-orange), var(--color-brick));
-    clip-path: polygon(25% 4%, 75% 4%, 100% 50%, 75% 96%, 25% 96%, 0% 50%);
-    transform: rotate(-5deg);
-  }
-
   .piece-character.piece-character-lg {
     width: min(372px, 68vw);
   }
@@ -318,7 +310,7 @@ const slugOf = (id: string) => id.split("/").slice(1).join("/");
 
   @media (max-width: 600px) {
     .hero-visual {
-      width: min(300px, 78vw);
+      width: min(260px, 74vw);
     }
   }
 
