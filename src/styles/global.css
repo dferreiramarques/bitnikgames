@@ -477,6 +477,35 @@ button {
   margin-top: 1.75rem;
 }
 
+.detail-video {
+  margin-top: 1.75rem;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+
+.detail-video iframe {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border: 0;
+}
+
+.video-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 1.75rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--brand-primary);
+}
+
+.video-link:hover {
+  color: var(--brand-primary-hover);
+}
+
 @media (max-width: 800px) {
   .detail-grid {
     grid-template-columns: 1fr;

@@ -5,6 +5,7 @@ import Layout from "../layouts/Layout.astro";
 import { pathTo, type Locale } from "../i18n/routes";
 import { t } from "../i18n/ui";
 import { hasCoverImage } from "../lib/coverImage";
+import { youtubeEmbedUrl } from "../lib/youtube";
 
 interface Props {
   locale: Locale;
@@ -17,11 +18,15 @@ const copy = t(locale).catalog;
 const badges = t(locale).badges;
 const nav = t(locale).nav;
 const otherLocale: Locale = locale === "pt" ? "en" : "pt";
-const { title, shortDescription, players, duration, age, status, price, externalUrl, externalLabel, tags } =
+const { title, shortDescription, players, duration, age, status, price, externalUrl, externalLabel, tags, video, videoEmbed } =
   entry.data;
 const { Content } = await render(entry);
 
 const coverSrc = hasCoverImage(slug) ? `/cards/${slug}.png` : null;
+// Só usa o embed se videoEmbed:true E o link for reconhecível como
+// YouTube — caso contrário cai sempre para o link simples, para nunca
+// mostrar uma caixa de vídeo vazia.
+const videoEmbedSrc = video && videoEmbed ? youtubeEmbedUrl(video) : null;
 ---
 
 <Layout
@@ -89,6 +94,22 @@ const coverSrc = hasCoverImage(slug) ? `/cards/${slug}.png` : null;
         <div class="detail-content">
           <Content />
         </div>
+
+        {video && (
+          videoEmbedSrc ? (
+            <div class="detail-video">
+              <iframe
+                src={videoEmbedSrc}
+                title={title}
+                loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+              ></iframe>
+            </div>
+          ) : (
+            <a class="video-link" href={video} target="_blank" rel="noreferrer">▶ {copy.watchTrailer}</a>
+          )
+        )}
       </div>
     </div>
   </article>

@@ -48,6 +48,7 @@ export const ui = {
       duration: "min",
       age: "anos+",
       checkoutPlaceholder: "Checkout placeholder — a ligar em breve",
+      watchTrailer: "Ver trailer no YouTube",
     },
     pnp: {
       eyebrow: "Print & Play",
@@ -155,6 +156,7 @@ export const ui = {
       duration: "min",
       age: "yrs+",
       checkoutPlaceholder: "Checkout placeholder — coming soon",
+      watchTrailer: "Watch trailer on YouTube",
     },
     pnp: {
       eyebrow: "Print & Play",

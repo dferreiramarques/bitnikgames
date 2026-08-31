@@ -26,6 +26,11 @@ const sharedFields = {
   // CatalogDetailPage.astro / PnpDetailPage.astro).
   externalUrl: z.string().url().optional(),
   externalLabel: z.string().optional(),
+  // Link do YouTube (qualquer formato: watch?v=, youtu.be/, /shorts/). Por
+  // omissão fica só como link "Ver trailer"; com videoEmbed:true, o player
+  // fica embutido a seguir à descrição (ver CatalogDetailPage.astro).
+  video: z.string().url().optional(),
+  videoEmbed: z.boolean().default(false),
   tags: z.array(z.string()).default([]),
   featured: z.boolean().default(false),
   // Ordem manual (drag-and-drop no CMS); 0 = ainda ninguém mexeu, cai
