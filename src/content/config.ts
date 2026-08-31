@@ -58,6 +58,18 @@ const pnp = defineCollection({
     .refine(requiresExternalUrl, externalUrlRefinement),
 });
 
+// Texto do hero da homepage — coleção "singleton" (uma única entrada, slug
+// fixo "home") só para que o CMS o edite com o mesmo fluxo pt/en que já usa
+// para jogos/PnP/posts, em vez de ficar hardcoded em src/i18n/ui.ts.
+const hero = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/hero" }),
+  schema: z.object({
+    title: z.string(), // o H1 do hero
+    eyebrow: z.string(),
+    subtitle: z.string(),
+  }),
+});
+
 const posts = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/posts" }),
   schema: z.object({
@@ -71,4 +83,4 @@ const posts = defineCollection({
   }),
 });
 
-export const collections = { games, pnp, posts };
+export const collections = { games, pnp, posts, hero };

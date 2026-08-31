@@ -1,5 +1,5 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, getEntry } from "astro:content";
 import Layout from "../layouts/Layout.astro";
 import GameCard from "./GameCard.astro";
 import PnpCard from "./PnpCard.astro";
@@ -39,15 +39,21 @@ const allPosts = await getCollection("posts", ({ id }) => id.startsWith(`${local
 const latestPosts = pickFeatured(allPosts);
 
 const slugOf = (id: string) => id.split("/").slice(1).join("/");
+
+// Texto do hero vem do CMS (coleção "hero", entrada única "home") — cai
+// para src/i18n/ui.ts se essa entrada ainda não existir, para nunca partir
+// o build por falta de conteúdo.
+const heroEntry = await getEntry("hero", `${locale}/home`);
+const hero = heroEntry?.data ?? { eyebrow: copy.eyebrow, title: copy.title, subtitle: copy.subtitle };
 ---
 
-<Layout locale={locale} altPath={pathTo(otherLocale, "home")} title={copy.title} description={copy.subtitle}>
+<Layout locale={locale} altPath={pathTo(otherLocale, "home")} title={hero.title} description={hero.subtitle}>
   <section class="hero">
     <div class="container hero-row">
       <div class="hero-inner">
-        <span class="eyebrow">{copy.eyebrow}</span>
-        <h1>{copy.title}</h1>
-        <p class="hero-subtitle">{copy.subtitle}</p>
+        <span class="eyebrow">{hero.eyebrow}</span>
+        <h1>{hero.title}</h1>
+        <p class="hero-subtitle">{hero.subtitle}</p>
         <div class="hero-actions">
           <a class="btn btn-primary" href={pathTo(locale, "catalog")}>{copy.ctaCatalog}</a>
           <a class="btn btn-outline" href={pathTo(locale, "printAndPlay")}>{copy.ctaPnp}</a>
