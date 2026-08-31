@@ -1,5 +1,5 @@
 ---
-title: "Jogos pequenos, ideias grandes."
+title: "Jogos pequenos, grandes ideias."
 eyebrow: "Publisher independente de jogos de tabuleiro"
-subtitle: "A bitnikgames desenha, testa e publica jogos de tabuleiro — do print & play gratuito à caixa acabada. Este é o nosso catálogo, os nossos protótipos e as ideias por trás deles."
+subtitle: "Na bitnikgames desenhamos, testamos e publicamaos jogos de tabuleiro — do print & play gratuito à caixa acabada. Este é o nosso catálogo, os nossos protótipos e as ideias por trás deles."
 ---
