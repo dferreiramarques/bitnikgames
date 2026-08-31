@@ -71,7 +71,7 @@ const slugOf = (id: string) => id.split("/").slice(1).join("/");
 
         <div class="piece-orbit piece-hex">
           <div class="piece-avoid">
-            <img class="piece-face piece-character" src="/characters/zombiequerque.png" alt="" width="176" height="156" />
+            <img class="piece-face piece-character" src="/characters/zombiequerque.png" alt="" width="117" height="104" />
           </div>
         </div>
 
@@ -241,9 +241,9 @@ const slugOf = (id: string) => id.split("/").slice(1).join("/");
     animation: hero-float 6s ease-in-out infinite;
   }
 
-  /* Deslocamento de "fuga ao rato" (ver <script> abaixo) — fica num filho
-     à parte para não entrar em conflito com o transform do float acima;
-     a curva com overshoot é o que dá o ar elástico ao ir e ao voltar. */
+  /* Deslocamento de "fuga ao rato" (ver o script mais abaixo) — fica num
+     filho à parte para não entrar em conflito com o transform do float
+     acima; a curva com overshoot é o que dá o ar elástico ao ir e voltar. */
   .piece-avoid {
     transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
     will-change: transform;
@@ -289,7 +289,7 @@ const slugOf = (id: string) => id.split("/").slice(1).join("/");
   }
 
   .piece-hex .piece-character {
-    width: 156px;
+    width: 117px;
   }
 
   .piece-character {
