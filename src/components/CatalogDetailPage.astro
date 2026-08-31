@@ -2,10 +2,8 @@
 import type { CollectionEntry } from "astro:content";
 import { render } from "astro:content";
 import Layout from "../layouts/Layout.astro";
-import Badge from "./Badge.astro";
 import { pathTo, type Locale } from "../i18n/routes";
 import { t } from "../i18n/ui";
-import { entryBadge } from "../lib/badges";
 import { hasCoverImage } from "../lib/coverImage";
 
 interface Props {
@@ -23,7 +21,6 @@ const { title, shortDescription, players, duration, age, status, price, external
   entry.data;
 const { Content } = await render(entry);
 
-const badge = entryBadge(locale, status, price);
 const coverSrc = hasCoverImage(slug) ? `/cards/${slug}.png` : null;
 ---
 
@@ -41,7 +38,6 @@ const coverSrc = hasCoverImage(slug) ? `/cards/${slug}.png` : null;
 
       <div class="detail-body">
         <a class="back-link" href={pathTo(locale, "catalog")}>&larr; {nav.catalog}</a>
-        <Badge variant={badge.variant} label={badge.label} />
         <h1>{title}</h1>
         <p class="detail-lede">{shortDescription}</p>
 
@@ -70,7 +66,12 @@ const coverSrc = hasCoverImage(slug) ? `/cards/${slug}.png` : null;
         )}
 
         <div class="detail-cta">
-          {status === "buy-now" && (
+          {status === "buy-now" && externalUrl && (
+            <a class="btn btn-primary" href={externalUrl} target="_blank" rel="noreferrer">
+              {externalLabel ?? badges.buyNow} {price ? `· ${price}` : null}
+            </a>
+          )}
+          {status === "buy-now" && !externalUrl && (
             <button class="btn btn-primary" type="button" disabled title={copy.checkoutPlaceholder}>
               {badges.buyNow} {price ? `· ${price}` : null}
             </button>
