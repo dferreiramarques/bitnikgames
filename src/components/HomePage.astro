@@ -58,7 +58,7 @@ const slugOf = (id: string) => id.split("/").slice(1).join("/");
         <div class="hero-glow"></div>
 
         <div class="piece-orbit piece-die">
-          <img class="piece-face piece-character" src="/characters/bulbous.png" alt="" width="88" height="85" />
+          <img class="piece-face piece-character" src="/characters/bulbous.png" alt="" width="176" height="170" />
         </div>
 
         <div class="piece-orbit piece-card">
@@ -274,6 +274,10 @@ const slugOf = (id: string) => id.split("/").slice(1).join("/");
 
   .piece-character.piece-character-lg {
     width: min(372px, 68vw);
+  }
+
+  .piece-die .piece-character {
+    width: 156px;
   }
 
   .piece-character {
