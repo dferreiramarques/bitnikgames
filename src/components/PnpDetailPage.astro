@@ -35,7 +35,7 @@ const coverSrc = hasCoverImage(slug) ? `/cards/${slug}.png` : null;
 >
   <article class="section detail">
     <div class="container detail-grid">
-      <div class="detail-media" aria-hidden="true">
+      <div class="detail-media detail-sticky" aria-hidden="true">
         {coverSrc ? <img src={coverSrc} alt="" /> : title}
       </div>
 

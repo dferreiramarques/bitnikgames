@@ -37,8 +37,26 @@ const videoEmbedSrc = video && videoEmbed ? youtubeEmbedUrl(video) : null;
 >
   <article class="section detail">
     <div class="container detail-grid">
-      <div class="detail-media" aria-hidden="true">
-        {coverSrc ? <img src={coverSrc} alt="" /> : title}
+      <div class="detail-media-col detail-sticky">
+        <div class="detail-media" aria-hidden="true">
+          {coverSrc ? <img src={coverSrc} alt="" /> : title}
+        </div>
+
+        {video && (
+          videoEmbedSrc ? (
+            <div class="detail-video">
+              <iframe
+                src={videoEmbedSrc}
+                title={title}
+                loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+              ></iframe>
+            </div>
+          ) : (
+            <a class="video-link" href={video} target="_blank" rel="noreferrer">▶ {copy.watchTrailer}</a>
+          )
+        )}
       </div>
 
       <div class="detail-body">
@@ -94,22 +112,6 @@ const videoEmbedSrc = video && videoEmbed ? youtubeEmbedUrl(video) : null;
         <div class="detail-content">
           <Content />
         </div>
-
-        {video && (
-          videoEmbedSrc ? (
-            <div class="detail-video">
-              <iframe
-                src={videoEmbedSrc}
-                title={title}
-                loading="lazy"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen
-              ></iframe>
-            </div>
-          ) : (
-            <a class="video-link" href={video} target="_blank" rel="noreferrer">▶ {copy.watchTrailer}</a>
-          )
-        )}
       </div>
     </div>
   </article>

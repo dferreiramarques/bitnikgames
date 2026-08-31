@@ -390,6 +390,14 @@ button {
   align-items: start;
 }
 
+/* Sticky no topo da coluna de media enquanto se faz scroll ao texto ao
+   lado — aplica-se ao wrapper da coluna (pode conter só a imagem, ou
+   imagem + vídeo, ver .detail-media-col em CatalogDetailPage.astro). */
+.detail-sticky {
+  position: sticky;
+  top: 100px;
+}
+
 .detail-media {
   aspect-ratio: 1;
   border-radius: var(--radius-lg);
@@ -403,8 +411,6 @@ button {
   font-size: 1.4rem;
   text-align: center;
   padding: 2rem;
-  position: sticky;
-  top: 100px;
   overflow: hidden;
 }
 
@@ -417,6 +423,15 @@ button {
   height: 100%;
   object-fit: cover;
   border-radius: var(--radius-lg);
+}
+
+/* Coluna da capa na página de jogo, quando há trailer: imagem + vídeo
+   empilhados com a mesma largura, em vez do vídeo lá em baixo depois da
+   descrição (mais direto, menos scroll). */
+.detail-media-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
 }
 
 .back-link {
@@ -478,7 +493,6 @@ button {
 }
 
 .detail-video {
-  margin-top: 1.75rem;
   aspect-ratio: 16 / 9;
   border-radius: var(--radius-md);
   overflow: hidden;
@@ -496,7 +510,6 @@ button {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  margin-top: 1.75rem;
   font-family: var(--font-display);
   font-weight: 600;
   color: var(--brand-primary);
@@ -511,7 +524,7 @@ button {
     grid-template-columns: 1fr;
   }
 
-  .detail-media {
+  .detail-sticky {
     position: static;
   }
 }
