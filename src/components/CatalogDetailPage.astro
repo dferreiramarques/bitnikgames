@@ -23,13 +23,13 @@ const { title, shortDescription, players, duration, age, status, price, external
 const { Content } = await render(entry);
 
 const coverSrc = hasCoverImage(slug) ? `/cards/${slug}.png` : null;
-// O botão embutido da PayPal só aparece se o jogo tiver um paypalButtonId
-// (criado na conta Business, ver src/content/config.ts) E o site tiver
-// PUBLIC_PAYPAL_CLIENT_ID configurado — sem isso, cai no link/placeholder
-// que já existia, sem partir nada.
-const paypalClientId = import.meta.env.PUBLIC_PAYPAL_CLIENT_ID;
-const paypalReady = status === "buy-now" && Boolean(paypalButtonId) && Boolean(paypalClientId);
-const paypalContainerId = paypalButtonId ? `paypal-container-${paypalButtonId}` : "";
+// O botão da PayPal só aparece se o jogo tiver um paypalButtonId (ID do
+// "PayPal Button" criado na conta Business, ver src/content/config.ts) —
+// sem isso, cai no link/placeholder que já existia, sem partir nada. É o
+// export "single button" da PayPal (form estático a fazer POST para
+// ncp/payment/<id>), não o widget "Hosted Buttons" com SDK — não precisa
+// de client-id nem de script.
+const paypalReady = status === "buy-now" && Boolean(paypalButtonId);
 // Só usa o embed se videoEmbed:true E o link for reconhecível como
 // YouTube — caso contrário cai sempre para o link simples, para nunca
 // mostrar uma caixa de vídeo vazia.
@@ -97,7 +97,11 @@ const videoEmbedSrc = video && videoEmbed ? youtubeEmbedUrl(video) : null;
 
         <div class="detail-cta">
           {paypalReady && (
-            <div id={paypalContainerId} class="paypal-button-container"></div>
+            <form action={`https://www.paypal.com/ncp/payment/${paypalButtonId}`} method="post" target="_blank">
+              <button class="btn btn-primary" type="submit">
+                {externalLabel ?? badges.buyNow} {price ? `· ${price}` : null}
+              </button>
+            </form>
           )}
           {status === "buy-now" && !paypalReady && externalUrl && (
             <a class="btn btn-primary" href={externalUrl} target="_blank" rel="noreferrer">
@@ -118,22 +122,6 @@ const videoEmbedSrc = video && videoEmbed ? youtubeEmbedUrl(video) : null;
             <span class="btn btn-outline" aria-disabled="true">{badges.comingSoon}</span>
           )}
         </div>
-
-        {paypalReady && (
-          <script type="module" define:vars={{ clientId: paypalClientId, buttonId: paypalButtonId, containerId: paypalContainerId }}>
-            function renderButton() {
-              window.paypal.HostedButtons({ hostedButtonId: buttonId }).render(`#${containerId}`);
-            }
-            if (window.paypal) {
-              renderButton();
-            } else {
-              const sdk = document.createElement("script");
-              sdk.src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(clientId)}&components=hosted-buttons&disable-funding=venmo&currency=EUR`;
-              sdk.addEventListener("load", renderButton);
-              document.head.appendChild(sdk);
-            }
-          </script>
-        )}
 
         <div class="detail-content">
           <Content />
