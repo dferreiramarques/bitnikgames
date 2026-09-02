@@ -2,7 +2,7 @@
 order: 2
 title: "Bael's Grotto"
 shortDescription: "Descrição a preencher."
-players: { min: 2, max: 4 }
+players: { min: 2, max: 2 }
 duration: 30
 age: 14
 status: "buy-now"
