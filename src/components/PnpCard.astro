@@ -28,6 +28,9 @@ const coverSrc = hasCoverImage(slug) ? `/cards/${slug}.png` : null;
     <p class="card-excerpt">{shortDescription}</p>
     <div class="card-footer">
       <Badge variant={badge.variant} label={badge.label} />
+      {/* status "paid" já mostra o preço como label do badge (ver entryBadge
+         em src/lib/badges.ts) — repeti-lo aqui duplicava o valor. */}
+      {(status === "buy-now" || status === "pwyw") && price ? <strong>{price}</strong> : null}
     </div>
   </div>
 </a>
