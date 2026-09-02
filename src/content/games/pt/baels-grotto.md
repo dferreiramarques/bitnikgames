@@ -4,10 +4,11 @@ title: "Bael's Grotto"
 shortDescription: "Descrição a preencher."
 players: { min: 2, max: 4 }
 duration: 30
-age: 10
+age: 14
 status: "buy-now"
-price: "10€"
-tags: ["família", "estratégia"]
+paypalButtonId: "RUZE7BQV2PRHW"
+price: "12€"
+tags: ["Roll&Write", "família", "estratégia"]
 featured: true
 publishedDate: 2026-08-26
 ---
