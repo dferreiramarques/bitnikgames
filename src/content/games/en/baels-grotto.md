@@ -13,4 +13,4 @@ featured: true
 publishedDate: 2026-08-26
 ---
 
-Full description coming soon.
+A roll & write adventure.
