@@ -3,7 +3,7 @@ title: "Bulbous"
 shortDescription: "Read the table, place your bet, and try to see through your opponents before Bulbous's creatures catch you off guard."
 players: { min: 2, max: 4 }
 duration: 30
-age: 10
+age: 14
 status: "buy-now"
 paypalButtonId: "S53GZ6SD3GAFL"
 price: "20€"
