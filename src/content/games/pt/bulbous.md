@@ -6,7 +6,7 @@ duration: 30
 age: 10
 status: "buy-now"
 paypalButtonId: "S53GZ6SD3GAF"
-price: "18€"
+price: "20€"
 tags: ["trick-taking", "apostas", "cartas"]
 featured: true
 publishedDate: 2026-08-26
