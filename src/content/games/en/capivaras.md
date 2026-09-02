@@ -6,7 +6,8 @@ players: { min: 2, max: 6 }
 duration: 20
 age: 8
 status: "buy-now"
-price: "€10"
+price: "15€"
+paypalButtonId: "GJKK7BGX5H53S"
 tags: ["simultaneous bidding", "family"]
 featured: true
 publishedDate: 2026-08-26
