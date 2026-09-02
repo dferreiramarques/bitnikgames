@@ -5,6 +5,7 @@ players: { min: 2, max: 4 }
 duration: 30
 age: 10
 status: "buy-now"
+paypalButtonId: "S53GZ6SD3GAF"
 price: "18€"
 tags: ["trick-taking", "apostas", "cartas"]
 featured: true
