@@ -4,7 +4,7 @@ title: "Capivaras"
 shortDescription: "A simultaneous-bidding game about how many friends you can attract onto your capybara."
 players: { min: 2, max: 6 }
 duration: 20
-age: 8
+age: 14
 status: "buy-now"
 price: "15€"
 paypalButtonId: "GJKK7BGX5H53S"
