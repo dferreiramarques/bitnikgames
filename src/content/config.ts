@@ -26,6 +26,11 @@ const sharedFields = {
   // CatalogDetailPage.astro / PnpDetailPage.astro).
   externalUrl: z.string().url().optional(),
   externalLabel: z.string().optional(),
+  // ID de um "PayPal Button" (Hosted Button) criado na conta Business —
+  // https://www.paypal.com/buttons. Quando presente num jogo "buy-now",
+  // embute o botão real da PayPal na página em vez do link/placeholder (ver
+  // CatalogDetailPage.astro). Requer PUBLIC_PAYPAL_CLIENT_ID configurado.
+  paypalButtonId: z.string().optional(),
   // Link do YouTube (qualquer formato: watch?v=, youtu.be/, /shorts/). Por
   // omissão fica só como link "Ver trailer"; com videoEmbed:true, o player
   // fica embutido a seguir à descrição (ver CatalogDetailPage.astro).

@@ -18,11 +18,18 @@ const copy = t(locale).catalog;
 const badges = t(locale).badges;
 const nav = t(locale).nav;
 const otherLocale: Locale = locale === "pt" ? "en" : "pt";
-const { title, shortDescription, players, duration, age, status, price, externalUrl, externalLabel, tags, video, videoEmbed } =
+const { title, shortDescription, players, duration, age, status, price, externalUrl, externalLabel, tags, video, videoEmbed, paypalButtonId } =
   entry.data;
 const { Content } = await render(entry);
 
 const coverSrc = hasCoverImage(slug) ? `/cards/${slug}.png` : null;
+// O botão embutido da PayPal só aparece se o jogo tiver um paypalButtonId
+// (criado na conta Business, ver src/content/config.ts) E o site tiver
+// PUBLIC_PAYPAL_CLIENT_ID configurado — sem isso, cai no link/placeholder
+// que já existia, sem partir nada.
+const paypalClientId = import.meta.env.PUBLIC_PAYPAL_CLIENT_ID;
+const paypalReady = status === "buy-now" && Boolean(paypalButtonId) && Boolean(paypalClientId);
+const paypalContainerId = paypalButtonId ? `paypal-container-${paypalButtonId}` : "";
 // Só usa o embed se videoEmbed:true E o link for reconhecível como
 // YouTube — caso contrário cai sempre para o link simples, para nunca
 // mostrar uma caixa de vídeo vazia.
@@ -89,12 +96,15 @@ const videoEmbedSrc = video && videoEmbed ? youtubeEmbedUrl(video) : null;
         )}
 
         <div class="detail-cta">
-          {status === "buy-now" && externalUrl && (
+          {paypalReady && (
+            <div id={paypalContainerId} class="paypal-button-container"></div>
+          )}
+          {status === "buy-now" && !paypalReady && externalUrl && (
             <a class="btn btn-primary" href={externalUrl} target="_blank" rel="noreferrer">
               {externalLabel ?? badges.buyNow} {price ? `· ${price}` : null}
             </a>
           )}
-          {status === "buy-now" && !externalUrl && (
+          {status === "buy-now" && !paypalReady && !externalUrl && (
             <button class="btn btn-primary" type="button" disabled title={copy.checkoutPlaceholder}>
               {badges.buyNow} {price ? `· ${price}` : null}
             </button>
@@ -108,6 +118,22 @@ const videoEmbedSrc = video && videoEmbed ? youtubeEmbedUrl(video) : null;
             <span class="btn btn-outline" aria-disabled="true">{badges.comingSoon}</span>
           )}
         </div>
+
+        {paypalReady && (
+          <script type="module" define:vars={{ clientId: paypalClientId, buttonId: paypalButtonId, containerId: paypalContainerId }}>
+            function renderButton() {
+              window.paypal.HostedButtons({ hostedButtonId: buttonId }).render(`#${containerId}`);
+            }
+            if (window.paypal) {
+              renderButton();
+            } else {
+              const sdk = document.createElement("script");
+              sdk.src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(clientId)}&components=hosted-buttons&disable-funding=venmo&currency=EUR`;
+              sdk.addEventListener("load", renderButton);
+              document.head.appendChild(sdk);
+            }
+          </script>
+        )}
 
         <div class="detail-content">
           <Content />
