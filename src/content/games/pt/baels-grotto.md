@@ -13,4 +13,4 @@ featured: true
 publishedDate: 2026-08-26
 ---
 
-Descrição completa a chegar em breve.
+Uma aventura roll & write no universo Bulbous.
