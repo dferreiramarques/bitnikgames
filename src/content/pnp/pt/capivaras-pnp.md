@@ -4,9 +4,9 @@ title: "Capivaras"
 shortDescription: "Um jogo de apostas simultâneas para veres quantos amigos consegues atrair para cima da tua capivara."
 players: { min: 2, max: 6 }
 duration: 20
-age: 8
+age: 14
 status: "buy-now"
-price: "10€"
+price: "1.99€"
 tags: ["apostas simultâneas", "família"]
 featured: true
 publishedDate: 2026-08-26
