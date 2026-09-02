@@ -4,9 +4,10 @@ title: "Bael's Grotto"
 shortDescription: "Description coming soon."
 players: { min: 2, max: 4 }
 duration: 30
-age: 10
+age: 14
 status: "buy-now"
-price: "€10"
+paypalButtonId: "RUZE7BQV2PRHW"
+price: "€12"
 tags: ["family", "strategy"]
 featured: true
 publishedDate: 2026-08-26
