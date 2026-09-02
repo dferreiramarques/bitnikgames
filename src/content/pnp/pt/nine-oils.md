@@ -7,7 +7,7 @@ status: "buy-now"
 price: "1.99€"
 fileUrl: "#"
 externalUrl: "https://bitnikgames.itch.io/nine-oils-the-cardgame"
-externalLabel: "Comprar no itch.io"
+ctaLabel: "Comprar no itch.io"
 players: { min: 2, max: 2 }
 duration: 20
 tags: ["dados", "combos"]

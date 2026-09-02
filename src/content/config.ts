@@ -25,7 +25,12 @@ const sharedFields = {
   // download direto — quando presente, tem prioridade no botão de CTA (ver
   // CatalogDetailPage.astro / PnpDetailPage.astro).
   externalUrl: z.string().url().optional(),
-  externalLabel: z.string().optional(),
+  // Texto do botão principal da página — substitui o texto por omissão
+  // (definido em src/i18n/ui.ts) seja qual for o estado do botão: link
+  // externo, download, placeholder desativado, etc. Opcional; sem isto,
+  // cada estado usa o seu texto por omissão (ver CatalogDetailPage.astro /
+  // PnpDetailPage.astro).
+  ctaLabel: z.string().optional(),
   // ID de um "PayPal Button" criado na conta Business —
   // https://www.paypal.com/buttons. Quando presente num jogo "buy-now",
   // troca o link/placeholder por um botão real que faz POST direto para

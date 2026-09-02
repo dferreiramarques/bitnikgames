@@ -18,7 +18,7 @@ const copy = t(locale).catalog;
 const badges = t(locale).badges;
 const nav = t(locale).nav;
 const otherLocale: Locale = locale === "pt" ? "en" : "pt";
-const { title, shortDescription, players, duration, age, status, price, externalUrl, externalLabel, tags, video, videoEmbed, paypalButtonId } =
+const { title, shortDescription, players, duration, age, status, price, externalUrl, ctaLabel, tags, video, videoEmbed, paypalButtonId } =
   entry.data;
 const { Content } = await render(entry);
 
@@ -99,27 +99,27 @@ const videoEmbedSrc = video && videoEmbed ? youtubeEmbedUrl(video) : null;
           {paypalReady && (
             <form action={`https://www.paypal.com/ncp/payment/${paypalButtonId}`} method="post" target="_blank">
               <button class="btn btn-primary" type="submit">
-                {externalLabel ?? badges.buyNow} {price ? `· ${price}` : null}
+                {ctaLabel ?? badges.buyNow} {price ? `· ${price}` : null}
               </button>
             </form>
           )}
           {status === "buy-now" && !paypalReady && externalUrl && (
             <a class="btn btn-primary" href={externalUrl} target="_blank" rel="noreferrer">
-              {externalLabel ?? badges.buyNow} {price ? `· ${price}` : null}
+              {ctaLabel ?? badges.buyNow} {price ? `· ${price}` : null}
             </a>
           )}
           {status === "buy-now" && !paypalReady && !externalUrl && (
             <button class="btn btn-primary" type="button" disabled title={copy.checkoutPlaceholder}>
-              {badges.buyNow} {price ? `· ${price}` : null}
+              {ctaLabel ?? badges.buyNow} {price ? `· ${price}` : null}
             </button>
           )}
           {status === "buy-external" && externalUrl && (
             <a class="btn btn-primary" href={externalUrl} target="_blank" rel="noreferrer">
-              {externalLabel ?? badges.buyExternal}
+              {ctaLabel ?? badges.buyExternal}
             </a>
           )}
           {status === "coming-soon" && (
-            <span class="btn btn-outline" aria-disabled="true">{badges.comingSoon}</span>
+            <span class="btn btn-outline" aria-disabled="true">{ctaLabel ?? badges.comingSoon}</span>
           )}
         </div>
 

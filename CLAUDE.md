@@ -47,7 +47,9 @@ Os PDFs de print & play não vivem em `public/` — ficam como assets da release
 
 Para publicar um ficheiro novo: `gh release upload pnp-files caminho/para/ficheiro.pdf --repo dferreiramarques/bitnikgames` (ou arrasta o PDF para a release na UI do GitHub), depois copia o link do asset para o campo `fileUrl` da entrada correspondente em `src/content/pnp/{pt,en}/<slug>.md` (substitui o `"#"` placeholder). `PnpDetailPage.astro` já trata isto automaticamente — o botão "Descarregar" fica ativo assim que `fileUrl !== "#"`.
 
-**PnPs pagos vendidos no itch.io** (em vez de download direto do site) usam `externalUrl` + `externalLabel` (mesmo padrão de `games.externalUrl`) — quando `externalUrl` está definido, o CTA em `PnpDetailPage.astro` vira um link externo para essa página em vez do botão de download, e `fileUrl` fica ignorado. Ex.: `nine-oils.md` (`access: "pwyw"`, `externalUrl` → `bitnikgames.itch.io/nine-oils-the-cardgame`).
+**PnPs pagos vendidos no itch.io** (em vez de download direto do site) usam `externalUrl` (+ opcionalmente `ctaLabel`, mesmo padrão de `games.externalUrl`) — quando `externalUrl` está definido, o CTA em `PnpDetailPage.astro` vira um link externo para essa página em vez do botão de download, e `fileUrl` fica ignorado. Ex.: `nine-oils.md` (`externalUrl` → `bitnikgames.itch.io/nine-oils-the-cardgame`).
+
+**Texto do botão de CTA** — `ctaLabel` (campo partilhado em `sharedFields`, `src/content/config.ts`) substitui o texto por omissão do botão principal seja qual for o estado: link externo, download de PnP, placeholder de checkout desativado, "brevemente", etc. Sem isto, cada estado usa o texto por omissão definido em `src/i18n/ui.ts`.
 
 ## O que ainda é placeholder (ver README secção 5 para a lista completa)
 
