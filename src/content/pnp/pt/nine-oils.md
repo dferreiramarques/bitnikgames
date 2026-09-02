@@ -4,7 +4,7 @@ featured: true
 title: "Nine Oils"
 shortDescription: "Descrição a preencher."
 status: "pwyw"
-price: "US$1.99 ou mais"
+price: "€1.99 ou mais"
 fileUrl: "#"
 externalUrl: "https://bitnikgames.itch.io/nine-oils-the-cardgame"
 externalLabel: "Comprar no itch.io"
