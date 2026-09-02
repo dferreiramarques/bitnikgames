@@ -5,9 +5,9 @@ title: "Zombiquerque"
 shortDescription: "Descrição a preencher."
 status: "free"
 fileUrl: "https://bitnikgames.itch.io/zombiequerque"
-players: { min: 2, max: 4 }
-duration: 30
-tags: ["festa"]
+players: { min: 2, max: 2 }
+duration: 15
+tags: ["PnP","classic", "alquerque", "checkers"]
 publishedDate: 2026-08-26
 ---
 
