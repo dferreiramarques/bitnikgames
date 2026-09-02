@@ -8,7 +8,7 @@ age: 14
 status: "buy-now"
 paypalButtonId: "RUZE7BQV2PRHW"
 price: "12€"
-tags: ["Roll&Write", "família", "estratégia"]
+tags: ["roll&write", "família", "estratégia"]
 featured: true
 publishedDate: 2026-08-26
 ---
