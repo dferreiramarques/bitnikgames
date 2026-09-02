@@ -342,6 +342,25 @@ const hero = heroEntry?.data ?? { eyebrow: copy.eyebrow, title: copy.title, subt
     .hero-visual {
       width: min(260px, 74vw);
     }
+
+    /* Aos tamanhos do desktop, as personagens quase enchem sozinhas este
+       contentor mais pequeno e ficam empilhadas — encolhem também aqui,
+       mantendo proporções semelhantes entre si. */
+    .piece-character.piece-character-lg {
+      width: min(180px, 50vw);
+    }
+
+    .piece-die .piece-character {
+      width: 100px;
+    }
+
+    .piece-hex .piece-character {
+      width: 76px;
+    }
+
+    .piece-coin .piece-character {
+      width: 52px;
+    }
   }
 
   .section-alt {
