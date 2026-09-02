@@ -3,7 +3,7 @@ order: 2
 featured: true
 title: "Nine Oils"
 shortDescription: "Description coming soon."
-status: "pwyw"
+status: "buy-now"
 price: "US$1.99 or more"
 fileUrl: "#"
 externalUrl: "https://bitnikgames.itch.io/nine-oils-the-cardgame"
