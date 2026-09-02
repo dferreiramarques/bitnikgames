@@ -4,7 +4,7 @@ featured: true
 title: "Zombiquerque"
 shortDescription: "Description coming soon."
 status: "free"
-fileUrl: "#"
+fileUrl: "https://bitnikgames.itch.io/zombiequerque"
 players: { min: 2, max: 4 }
 duration: 30
 tags: ["party"]
