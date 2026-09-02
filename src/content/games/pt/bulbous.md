@@ -3,7 +3,7 @@ title: "Bulbous"
 shortDescription: "Analisa, aposta e tenta ler os adversários antes que as criaturas de Bulbous te apanhem desprevenido."
 players: { min: 2, max: 4 }
 duration: 30
-age: 10
+age: 14
 status: "buy-now"
 paypalButtonId: "S53GZ6SD3GAFL"
 price: "20€"
