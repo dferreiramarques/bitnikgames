@@ -1,10 +1,10 @@
 ---
-import { getCollection } from "astro:content";
 import Layout from "../layouts/Layout.astro";
 import PostCard from "./PostCard.astro";
 import { pathTo, type Locale } from "../i18n/routes";
 import { t } from "../i18n/ui";
 import { sortEntries } from "../lib/sortEntries";
+import { getPublished } from "../lib/getPublished";
 
 interface Props {
   locale: Locale;
@@ -14,7 +14,7 @@ const { locale } = Astro.props;
 const copy = t(locale).blog;
 const otherLocale: Locale = locale === "pt" ? "en" : "pt";
 
-const posts = sortEntries(await getCollection("posts", ({ id }) => id.startsWith(`${locale}/`)));
+const posts = sortEntries(await getPublished("posts", locale));
 const slugOf = (id: string) => id.split("/").slice(1).join("/");
 ---
 

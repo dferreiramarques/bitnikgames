@@ -53,6 +53,11 @@ const sharedFields = {
   // para "mais recente primeiro" (ver src/lib/sortEntries.ts).
   order: z.number().default(0),
   publishedDate: z.coerce.date(),
+  // Checkbox "Rascunho" no CMS — entrada fica guardada e editável lá, mas
+  // sai de todas as listagens e páginas de detalhe do site (ver
+  // src/lib/getPublished.ts). Por omissão false, para nunca esconder
+  // conteúdo antigo de antes deste campo existir.
+  draft: z.boolean().default(false),
 };
 
 // status "buy-external" sem externalUrl faz o botão de compra desaparecer
@@ -111,6 +116,7 @@ const posts = defineCollection({
     featured: z.boolean().default(false),
     order: z.number().default(0),
     publishedDate: z.coerce.date(),
+    draft: z.boolean().default(false),
   }),
 });
 

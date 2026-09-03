@@ -1,9 +1,9 @@
 ---
-import { getCollection } from "astro:content";
 import CatalogDetailPage from "../../../components/CatalogDetailPage.astro";
+import { getPublished } from "../../../lib/getPublished";
 
 export async function getStaticPaths() {
-  const entries = await getCollection("games", ({ id }) => id.startsWith("pt/"));
+  const entries = await getPublished("games", "pt");
   return entries.map((entry) => {
     const slug = entry.id.split("/").slice(1).join("/");
     return { params: { slug }, props: { entry, slug } };
