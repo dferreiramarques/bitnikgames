@@ -5,7 +5,7 @@ order: 3
 title: "Gato Dorminhoco"
 shortDescription: "Um divertido jogo de destreza e reflexos em que os jogadores lançam o Gato Dorminhoco de mão em mão para acumular pontos e ser o primeiro a chegar aos 20."
 status: "free"
-fileUrl: "https://bitnikgames.itch.io/zombiequerque"
+fileUrl: "https://bitnikgames.itch.io/gato-dorminhoco"
 ctaLabel: "Comprar no itch.io"
 players: { min: 1, max: 20 }
 duration: 5
