@@ -5,5 +5,5 @@ links:
   - label: "BoardGameGeek"
     url: "https://boardgamegeek.com"
   - label: "itch.io"
-    url: "https://itch.io"
+    url: "https://bitnikgames.itch.io"
 ---
