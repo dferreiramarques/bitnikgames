@@ -5,7 +5,7 @@ order: 3
 title: "Sleepy Cat"
 shortDescription: "A fun game of skill and reflexes where players toss the Sleepy Cat from hand to hand, racing to be the first to reach 20 points."
 status: "free"
-fileUrl: "https://bitnikgames.itch.io/zombiequerque"
+fileUrl: "https://bitnikgames.itch.io/gato-dorminhoco"
 ctaLabel: "Buy at itch.io"
 players: { min: 1, max: 20 }
 duration: 5
