@@ -111,7 +111,7 @@ Para seres honesto contigo próprio (e com quem vir o site) sobre o que já est�
 - ~~**Newsletter**~~ — ligada ao Buttondown (`buttondown.com/bitnikgames`) via o método de embed sem backend deles; o `<form>` em `src/components/HomePage.astro` submete a sério.
 - **Ficheiros de print & play reais** — os links de download apontam para `#`. Substitui `fileUrl` no frontmatter de cada `.md` pelo link real do PDF (ou aloja-os em `public/downloads/` e aponta para lá).
 - **Imagens reais** — todos os cards e páginas de detalhe usam um gradiente com o nome do jogo em vez de arte real. Substitui `.card-media` / `.detail-media` por `<img>` quando tiveres capas.
-- **Redes sociais** — os links no footer (Instagram, BGG, itch.io) são placeholders a apontar para os domínios genéricos.
+- **Redes sociais** — os links no footer (Instagram, BGG, itch.io) são placeholders a apontar para os domínios genéricos. Editáveis via CMS (coleção `footer`, `src/content/footer/{pt,en}/home.md`) ou diretamente nesses ficheiros.
 - **Acessibilidade e SEO** — os fundamentos estão lá (`lang`, `hreflang`, `alt`/`aria-hidden` onde relevante, contraste verificado a olho), mas vale a pena passar um Lighthouse antes de publicar a sério.
 
 Nenhum destes pontos foi pedido nesta fase — ficam aqui só para que sejam decisões conscientes mais tarde, não esquecimentos.

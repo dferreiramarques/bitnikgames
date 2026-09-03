@@ -1,4 +1,5 @@
 ---
+import { getEntry } from "astro:content";
 import { pathTo, type Locale } from "../i18n/routes";
 import { t } from "../i18n/ui";
 
@@ -10,6 +11,15 @@ const { locale } = Astro.props;
 const copy = t(locale).footer;
 const nav = t(locale).nav;
 const year = new Date().getFullYear();
+
+// Links de "Segue-nos" vêm do CMS (coleção "footer", entrada única "home")
+// — cai para os placeholders atuais se essa entrada ainda não existir.
+const footerEntry = await getEntry("footer", `${locale}/home`);
+const socialLinks = footerEntry?.data.links ?? [
+  { label: "Instagram", url: "https://instagram.com" },
+  { label: "BoardGameGeek", url: "https://boardgamegeek.com" },
+  { label: "itch.io", url: "https://itch.io" },
+];
 ---
 
 <footer class="site-footer">
@@ -36,9 +46,9 @@ const year = new Date().getFullYear();
     <div class="footer-col">
       <h3>{copy.follow}</h3>
       <ul>
-        <li><a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a></li>
-        <li><a href="https://boardgamegeek.com" target="_blank" rel="noreferrer">BoardGameGeek</a></li>
-        <li><a href="https://itch.io" target="_blank" rel="noreferrer">itch.io</a></li>
+        {socialLinks.map((link) => (
+          <li><a href={link.url} target="_blank" rel="noreferrer">{link.label}</a></li>
+        ))}
       </ul>
     </div>
   </div>

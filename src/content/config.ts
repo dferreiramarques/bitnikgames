@@ -91,6 +91,16 @@ const hero = defineCollection({
   }),
 });
 
+// Links de "Segue-nos" no footer — coleção "singleton" (uma única entrada,
+// slug fixo "home"), mesmo padrão de "hero", para o CMS editar isto em vez
+// de ficar hardcoded em Footer.astro.
+const footer = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/footer" }),
+  schema: z.object({
+    links: z.array(z.object({ label: z.string(), url: z.string().url() })).default([]),
+  }),
+});
+
 const posts = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/posts" }),
   schema: z.object({
@@ -104,4 +114,4 @@ const posts = defineCollection({
   }),
 });
 
-export const collections = { games, pnp, posts, hero };
+export const collections = { games, pnp, posts, hero, footer };
