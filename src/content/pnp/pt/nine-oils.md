@@ -1,5 +1,5 @@
 ---
-order: 1
+order: 2
 featured: true
 title: "Nine Oils"
 shortDescription: "Nine Oils é um jogo de dados ligeiro para 2 jogadores, onde a sorte anda de mãos dadas com a estratégia."
