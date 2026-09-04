@@ -1,5 +1,5 @@
 ---
-order: 2
+order: 1
 title: "Prototyping with index cards: is it worth it?"
 excerpt: "We tested three games in a row using nothing but index cards and a pen. The results were mixed."
 readingMinutes: 4
