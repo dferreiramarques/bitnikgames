@@ -1,4 +1,5 @@
 ---
+order: 2
 title: "What we learned publishing our first print & play"
 excerpt: "Semente was designed to be small. We weren't ready for what happened next."
 readingMinutes: 5
