@@ -1,4 +1,5 @@
 ---
+draft: false
 order: 1
 title: "Capivaras"
 shortDescription: "Um jogo de apostas simultâneas para veres quantos amigos consegues atrair para cima da tua capivara."
@@ -6,6 +7,8 @@ players: { min: 2, max: 6 }
 duration: 20
 age: 14
 status: "buy-now"
+externalUrl : "https://bitnikgames.itch.io/capivaras-pnp"
+ctaLabel : "Comprar no itch.io"
 price: "1.99€"
 tags: ["apostas simultâneas", "família"]
 featured: true
