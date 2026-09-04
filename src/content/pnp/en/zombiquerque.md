@@ -1,5 +1,5 @@
 ---
-order: 2
+order: 1
 featured: true
 title: "Zombiquerque"
 shortDescription: "Embark on an exciting competitive journey in the post-apocalyptic world of Zombiequerque, the board game that combines the excitement of the classic Alquerque with the relentless threat of flesh-hungry zombies."
