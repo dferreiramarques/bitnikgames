@@ -9,6 +9,7 @@ age: 14
 status: "buy-now"
 price: "€1.99"
 externalUrl : "https://bitnikgames.itch.io/capivaras-pnp"
+ctaLabel : "Buy at itch.io"
 tags: ["simultaneous bidding", "family"]
 featured: true
 publishedDate: 2026-08-26
