@@ -8,6 +8,7 @@ duration: 20
 age: 14
 status: "buy-now"
 externalUrl : "https://bitnikgames.itch.io/capivaras-pnp"
+ctaLabel : "Comprar no itch.io"
 price: "1.99€"
 tags: ["apostas simultâneas", "família"]
 featured: true
