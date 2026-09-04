@@ -1,6 +1,6 @@
 ---
 draft: false
-order: 1
+order: 0
 title: "Capivaras"
 shortDescription: "A simultaneous-bidding game about how many friends you can attract onto your capybara."
 players: { min: 2, max: 6 }
