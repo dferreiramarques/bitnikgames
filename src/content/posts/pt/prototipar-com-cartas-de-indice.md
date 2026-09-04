@@ -1,5 +1,5 @@
 ---
-order: 1
+order: 2
 title: "Prototipar com cartas de índice: vale a pena?"
 excerpt: "Testámos três jogos seguidos só com cartas de índice e uma caneta. Os resultados foram mistos."
 readingMinutes: 4
