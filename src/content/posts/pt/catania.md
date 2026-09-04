@@ -22,4 +22,7 @@ O primeiro jogo da série é “Catania”, um spinoff do adorado jogo Catan. Em
 
 Fica atento a mais jogos inovadores da série “Boardgame Spinoff”, onde a criatividade se cruza com a jogabilidade clássica. Junta-te a mim nesta viagem para explorar novos horizontes no design de jogos!
 
+ctaLabel: "Jogar online"
+externalUrl: "https://catania.bitnik.games/"
+
 
