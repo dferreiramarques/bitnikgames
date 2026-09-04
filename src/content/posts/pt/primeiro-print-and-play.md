@@ -1,5 +1,5 @@
 ---
-order: 2
+order: 1
 title: "O que aprendemos ao publicar o nosso primeiro print & play"
 excerpt: "Semente foi pensado para ser pequeno. Não estávamos à espera do que aconteceu a seguir."
 readingMinutes: 5
