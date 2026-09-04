@@ -17,3 +17,6 @@ It worked. It wasn't broken. But session after session, it was the part of the g
 We swapped it for a simple reservation system: any flower can be held for one turn before it's sold. Fewer rules, more tension at the table.
 
 Cutting something that works isn't always the right call — but this time it was.
+
+ctaLabel: "Play online"
+externalUrl: "https://catania.bitnik.games/"
