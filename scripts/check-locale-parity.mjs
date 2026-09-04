@@ -6,7 +6,7 @@
 import { readdirSync, existsSync } from "node:fs";
 import { join } from "node:path";
 
-const collections = ["games", "pnp", "posts"];
+const collections = ["games", "pnp", "posts", "play-online"];
 const contentRoot = join(import.meta.dirname, "..", "src", "content");
 
 const slugsIn = (dir) =>

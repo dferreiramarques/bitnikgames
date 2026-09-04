@@ -106,6 +106,22 @@ const footer = defineCollection({
   }),
 });
 
+// Cartões da página "Jogar Online" — cada jogo corre no seu próprio servidor
+// (jogos em tempo real precisam de mais do que ficheiros estáticos), por
+// isso "url" é sempre um link externo, nunca uma rota interna do site. Sem
+// featured/status/etc. — é só título, descrição curta e link, mesmo padrão
+// pt/en das outras coleções (ver PlayOnlineIndexPage.astro).
+const playOnline = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/play-online" }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    url: z.string().url(),
+    // Ordem manual (drag-and-drop no CMS); 0 = ainda ninguém mexeu.
+    order: z.number().default(0),
+  }),
+});
+
 const posts = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/posts" }),
   schema: z.object({
@@ -120,4 +136,4 @@ const posts = defineCollection({
   }),
 });
 
-export const collections = { games, pnp, posts, hero, footer };
+export const collections = { games, pnp, posts, hero, footer, playOnline };

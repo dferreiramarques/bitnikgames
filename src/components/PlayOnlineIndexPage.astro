@@ -1,4 +1,5 @@
 ---
+import { getCollection } from "astro:content";
 import Layout from "../layouts/Layout.astro";
 import { pathTo, type Locale } from "../i18n/routes";
 import { t } from "../i18n/ui";
@@ -11,45 +12,13 @@ const { locale } = Astro.props;
 const copy = t(locale).playOnline;
 const otherLocale: Locale = locale === "pt" ? "en" : "pt";
 
-// Registo simples dos jogos disponíveis para jogar online. Cada um corre
-// no seu próprio servidor (jogos em tempo real precisam de mais do que
-// ficheiros estáticos) — por isso o link é sempre externo, nunca uma
-// rota interna do site. Quando houver mais do que um jogo, isto passa a
-// listar vários cartões sem precisar de mudar mais nada aqui.
-const games = [
-  {
-    title: "Bulbous",
-    url: "https://bulbous.up.railway.app/",
-    description: {
-      pt: "Sorte, bluff e estratégia — multijogador em tempo real, até 4 jogadores ou contra bots.",
-      en: "Luck, bluff, and strategy — realtime multiplayer for up to 4 players, or against bots.",
-    },
-  },
-  {
-    title: "Capivaras",
-    url: "https://capivaras.up.railway.app/",
-    description: {
-      pt: "Aposta em silêncio para conquistar as capivaras do Pantanal — quem escolher a mesma que outro jogador fica a ver navios.",
-      en: "Bet in silence to win over the Pantanal's capybaras — pick the same one as another player and they both scare it off.",
-    },
-  },
-  {
-    title: "Catania",
-    url: "https://catania.up.railway.app/",
-    description: {
-      pt: "Gestão de recursos na Sicília do Século VIII a.C. — recolhe cereais, vinho e azeite, e funda cidades antes dos outros.",
-      en: "Resource management in 8th-century BC Sicily — gather grain, wine, and olive oil, and found cities before the others do.",
-    },
-  },
-  {
-    title: "Nine Oils",
-    url: "https://nineoils.up.railway.app/",
-    description: {
-      pt: "Um jogo de sorte e vontade — atira 9 dados, junta combos e enche a tua banca de óleo de cobra antes do adversário.",
-      en: "A game of luck and will — roll 9 dice, chain combos, and stock your snake-oil stall before your opponent does.",
-    },
-  },
-];
+// Cartões geridos no CMS (coleção "playOnline") — cada jogo corre no seu
+// próprio servidor (jogos em tempo real precisam de mais do que ficheiros
+// estáticos), por isso "url" é sempre um link externo, nunca uma rota
+// interna do site.
+const games = (await getCollection("playOnline", ({ id }) => id.startsWith(`${locale}/`))).sort(
+  (a, b) => a.data.order - b.data.order
+);
 ---
 
 <Layout locale={locale} altPath={pathTo(otherLocale, "playOnline")} title={copy.title} description={copy.subtitle}>
@@ -66,10 +35,10 @@ const games = [
           {games.map((game) => (
             <div class="card play-card">
               <div class="card-body">
-                <h3 class="card-title">{game.title}</h3>
-                <p class="card-excerpt">{game.description[locale]}</p>
+                <h3 class="card-title">{game.data.title}</h3>
+                <p class="card-excerpt">{game.data.description}</p>
               </div>
-              <a class="btn btn-primary btn-block" href={game.url} target="_blank" rel="noreferrer">
+              <a class="btn btn-primary btn-block" href={game.data.url} target="_blank" rel="noreferrer">
                 {copy.openGame} &rarr;
               </a>
             </div>
