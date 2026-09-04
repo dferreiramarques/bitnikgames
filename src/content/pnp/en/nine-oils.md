@@ -1,5 +1,5 @@
 ---
-order: 1
+order: 2
 featured: true
 title: "Nine Oils"
 shortDescription: "Nine Oils is a lightweight dice game for 2 players, where luck goes hand in hand with strategy."
