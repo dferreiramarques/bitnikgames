@@ -1,8 +1,10 @@
 ---
-title: "Why we cut a mechanic at the last minute"
-excerpt: "Rio de Flores had a full auction system until three weeks before it went to print. Here's why it left."
+draft: false
+featured: false
+title: "Boardgame Spinoff #1: Catania"
+excerpt: "A new game that reuses the pieces from the classic game Catan."
 readingMinutes: 6
-tags: ["design", "rio-de-flores", "playtesting"]
+tags: ["boardgame-design", "spinoff", "PnP"]
 publishedDate: 2026-04-02
 ---
 
