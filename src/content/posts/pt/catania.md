@@ -24,5 +24,7 @@ Fica atento a mais jogos inovadores da série “Boardgame Spinoff”, onde a cr
 
 
 Joga aqui: https://catania.bitnik.games/
+Tabletop Simulator: https://steamcommunity.com/sharedfiles/filedetails/?id=3333034208
+Regras: https://github.com/dferreiramarques/catania-v2/blob/main/Catania-Rulebook.pdf
 
 
