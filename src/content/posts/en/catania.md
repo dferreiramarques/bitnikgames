@@ -18,5 +18,4 @@ We swapped it for a simple reservation system: any flower can be held for one tu
 
 Cutting something that works isn't always the right call — but this time it was.
 
-ctaLabel: "Play online"
-externalUrl: "https://catania.bitnik.games/"
+Play it: https://catania.bitnik.games/
