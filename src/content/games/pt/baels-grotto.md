@@ -1,5 +1,5 @@
 ---
-order: 2
+order: 1
 title: "Bael's Grotto"
 shortDescription: "A Gruta de Bael é um lugar misterioso, situado na região proibida. As lendas ancestrais contam histórias de criaturas misteriosas e de suculentos bolbos vindos das profundezas."
 players: { min: 2, max: 2 }
