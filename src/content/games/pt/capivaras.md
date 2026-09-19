@@ -1,5 +1,5 @@
 ---
-order: 1
+order: 2
 title: "Capivaras"
 shortDescription: "Um jogo de apostas simultâneas para veres quantos amigos consegues atrair para cima da tua capivara."
 players: { min: 2, max: 6 }
