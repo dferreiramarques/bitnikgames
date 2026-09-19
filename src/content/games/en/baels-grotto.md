@@ -1,5 +1,5 @@
 ---
-order: 2
+order: 1
 title: "Bael's Grotto"
 shortDescription: "Bael’s Grotto is a mysterious place located in the forbidden region. Elder legends tell stories of mysterious creatures and succulent bulbs from the depths. "
 players: { min: 2, max: 2 }
