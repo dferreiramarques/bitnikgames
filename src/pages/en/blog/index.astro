@@ -1,5 +1,11 @@
 ---
 import BlogIndexPage from "../../../components/BlogIndexPage.astro";
+import { isBlogEnabled } from "../../../lib/siteSettings";
+import { pathTo } from "../../../i18n/routes";
+
+// Blog escondido no CMS: a lista deixa de existir e quem tiver o link antigo
+// vai parar à homepage (redirect estático, não um 404 seco).
+if (!(await isBlogEnabled())) return Astro.redirect(pathTo("en", "home"));
 ---
 
 <BlogIndexPage locale="en" />

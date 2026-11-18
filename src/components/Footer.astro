@@ -2,6 +2,7 @@
 import { getEntry } from "astro:content";
 import { pathTo, type Locale } from "../i18n/routes";
 import { t } from "../i18n/ui";
+import { isBlogEnabled } from "../lib/siteSettings";
 
 interface Props {
   locale: Locale;
@@ -11,6 +12,7 @@ const { locale } = Astro.props;
 const copy = t(locale).footer;
 const nav = t(locale).nav;
 const year = new Date().getFullYear();
+const blogEnabled = await isBlogEnabled();
 
 // Links de "Segue-nos" vêm do CMS (coleção "footer", entrada única "home")
 // — cai para os placeholders atuais se essa entrada ainda não existir.
@@ -37,7 +39,7 @@ const socialLinks = footerEntry?.data.links ?? [
         <li><a href={pathTo(locale, "catalog")}>{nav.catalog}</a></li>
         <li><a href={pathTo(locale, "printAndPlay")}>{nav.printAndPlay}</a></li>
         <li><a href={pathTo(locale, "playOnline")}>{nav.playOnline}</a></li>
-        <li><a href={pathTo(locale, "blog")}>{nav.blog}</a></li>
+        {blogEnabled && <li><a href={pathTo(locale, "blog")}>{nav.blog}</a></li>}
         <li><a href={pathTo(locale, "tools")}>{nav.tools}</a></li>
         <li><a href={pathTo(locale, "about")}>{nav.about}</a></li>
       </ul>

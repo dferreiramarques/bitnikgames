@@ -136,4 +136,15 @@ const posts = defineCollection({
   }),
 });
 
-export const collections = { games, pnp, posts, hero, footer, playOnline };
+// Definições globais do site — coleção "singleton" (entrada única "home",
+// par pt/en com o mesmo valor). Hoje só tem o interruptor do blog, que o CMS
+// liga/desliga no separador Blog; false esconde o menu, o footer, a secção
+// da homepage e as páginas /blog (ver src/lib/siteSettings.ts).
+const settings = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/settings" }),
+  schema: z.object({
+    blogEnabled: z.boolean().default(true),
+  }),
+});
+
+export const collections = { games, pnp, posts, hero, footer, playOnline, settings };

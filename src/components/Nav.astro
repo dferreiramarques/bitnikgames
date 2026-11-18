@@ -1,6 +1,7 @@
 ---
 import { pathTo, type Locale } from "../i18n/routes";
 import { t } from "../i18n/ui";
+import { isBlogEnabled } from "../lib/siteSettings";
 
 interface Props {
   locale: Locale;
@@ -11,12 +12,13 @@ const { locale, altPath } = Astro.props;
 const nav = t(locale).nav;
 const otherLocale: Locale = locale === "pt" ? "en" : "pt";
 
+const blogEnabled = await isBlogEnabled();
 const currentPath = Astro.url.pathname;
 const navItems = [
   { href: pathTo(locale, "catalog"), label: nav.catalog },
   { href: pathTo(locale, "printAndPlay"), label: nav.printAndPlay },
   { href: pathTo(locale, "playOnline"), label: nav.playOnline },
-  { href: pathTo(locale, "blog"), label: nav.blog },
+  ...(blogEnabled ? [{ href: pathTo(locale, "blog"), label: nav.blog }] : []),
   { href: pathTo(locale, "tools"), label: nav.tools },
   { href: pathTo(locale, "about"), label: nav.about },
 ].map((item) => ({ ...item, isActive: currentPath.startsWith(item.href) }));

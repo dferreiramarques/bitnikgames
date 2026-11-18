@@ -1,8 +1,11 @@
 ---
 import BlogDetailPage from "../../../components/BlogDetailPage.astro";
 import { getPublished } from "../../../lib/getPublished";
+import { isBlogEnabled } from "../../../lib/siteSettings";
 
 export async function getStaticPaths() {
+  // Blog escondido no CMS: nenhuma página de post é gerada.
+  if (!(await isBlogEnabled())) return [];
   const entries = await getPublished("posts", "en");
   return entries.map((entry) => {
     const slug = entry.id.split("/").slice(1).join("/");
